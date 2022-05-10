@@ -1,3 +1,5 @@
+import numpy as np
+
 def create_children(archive, domain, config):
     
     # Randomly select parents and copy to children
@@ -7,11 +9,13 @@ def create_children(archive, domain, config):
     children = np.take(pool, selection, axis=0)
     
     # Mutate children
-    ranges = domain.get('par_ranges')
+    ranges = np.array(domain['par_ranges'])
     mutation = np.random.randn(config.get('num_children'),domain.get('dof')) * config.get('mut_sigma')
-    mutation = np.transpose(mutation) * (ranges[1]-ranges[0])
-    children = children + np.transpose(mutation)
+    mutation = mutation * (ranges[1]-ranges[0])
+    children = children + mutation
     
     #TODO check par ranges
+    children[children>1.0] = 1.
+    children[children<0.0] = 0.
     
     return children

@@ -1,3 +1,5 @@
+import numpy as np
+
 def create_archive(domain, config):
     edges = []
     res = []

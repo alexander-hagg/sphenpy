@@ -2,7 +2,7 @@ def update_map(replaced, replacement, archive, fitness, genes, features):
     # Update fitness values
     a_fitness = archive.get('fitness')
     for f in range(len(replaced)):
-        a_fitness[replaced[f][0],replaced[f][1]] = fitness[:,replacement[f]]
+        a_fitness[replaced[f][0],replaced[f][1]] = fitness[replacement[f]]
     archive.update({'fitness': a_fitness})
     
     # Update feature values

@@ -1,0 +1,6 @@
+name: rastrigin
+features: [1,2]
+dof: 2
+nfeatures: 2
+par_ranges: [[-6, -6],[6, 6]]
+fit_range: [0, 100]

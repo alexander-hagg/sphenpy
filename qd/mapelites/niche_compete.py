@@ -1,8 +1,11 @@
+import numpy as np
+
 def niche_compete(fitness, features, archive, domain, config):
-    assert (features >= 0).all(),"Feature values smaller than 0, assumed to be normalized between [0,1]"
-    assert (features <= 1).all(),"Feature values larger than 1, assumed to be normalized between [0,1]"
-    assert (fitness >= 0).all(),"Fitness values smaller than 0, assumed to be normalized between [0,1]"
-    assert (fitness <= 1).all(),"Fitness values larger than 1, assumed to be normalized between [0,1]"
+    # print(features)
+    # assert (features >= 0).all(),"Feature values smaller than 0, assumed to be normalized between [0,1]"
+    # assert (features <= 1).all(),"Feature values larger than 1, assumed to be normalized between [0,1]"
+    # assert (fitness >= 0).all(),"Fitness values smaller than 0, assumed to be normalized between [0,1]"
+    # assert (fitness <= 1).all(),"Fitness values larger than 1, assumed to be normalized between [0,1]"
     
     # Discretize features into bins
     edges = np.linspace(0, 1, num=config.get('resolution'))
@@ -29,7 +32,7 @@ def niche_compete(fitness, features, archive, domain, config):
     for f in range(len(best_index)):
         archive_fitness = archive.get('fitness')
         bin_fitness = archive_fitness[best_bin[0,f],best_bin[1,f]]
-        if np.isnan(bin_fitness) or bin_fitness < fitness[:,best_index[f]]:
+        if np.isnan(bin_fitness) or bin_fitness < fitness[best_index[f]]:
             replacement.append(best_index[f])
             replaced.append([best_bin[0,f],best_bin[1,f]])
 
