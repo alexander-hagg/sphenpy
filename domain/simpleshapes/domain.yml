@@ -1,5 +1,6 @@
 name: simpleshapes
 features: [0,1]
+labels: ['area', 'circumference']
 dof: 16
 nfeatures: 2
 par_ranges: [[-6, -6],[6, 6]]

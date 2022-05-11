@@ -12,11 +12,11 @@ def evolve(init, config, domain, ff):
     archive = update.update_map(replaced, replacement, archive, fitness, init, features)
 
     # Evolution
-    for iGen in range(config.get('num_gens')):
+    for iGen in range(config['num_gens']):
         if iGen%100 == 0:
-            print('Generation: ' + str(iGen) + '/' + str(config.get('num_gens')))
+            print('Generation: ' + str(iGen) + '/' + str(config['num_gens']))
         children = np.array([])
-        while children.shape[0] < config.get('num_children'):
+        while children.shape[0] < config['num_children']:
             new_children = cc.create_children(archive, domain, config)
             children = np.vstack([children, new_children]) if children.size else new_children
 

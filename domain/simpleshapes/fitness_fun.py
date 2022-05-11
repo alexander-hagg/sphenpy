@@ -1,8 +1,10 @@
 import numpy as np
+from domain.simpleshapes import express
+
 
 def fitness_fun(population, domain):
     # Express shapes
-    phenotypes = express(population, domain)
+    phenotypes = express.do(population, domain)
     # features = population
     # features[features > 1] = 1
     # features[features < 0] = 0

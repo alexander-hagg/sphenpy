@@ -6,12 +6,12 @@ def niche_compete(fitness, features, archive, domain, config):
     # assert (features <= 1).all(),"Feature values larger than 1, assumed to be normalized between [0,1]"
     # assert (fitness >= 0).all(),"Fitness values smaller than 0, assumed to be normalized between [0,1]"
     # assert (fitness <= 1).all(),"Fitness values larger than 1, assumed to be normalized between [0,1]"
-    
+
     # Discretize features into bins
-    edges = np.linspace(0, 1, num=config.get('resolution'))
+    edges = np.linspace(0, 1, num=config['resolution'])
     bin_assignment = np.digitize(features,edges)
     bin_assignment = bin_assignment - 1
-    
+
     ## Find highest fitness per bin
     # Sort bins by fitness, then by bin coordinates
     bin_fitness = np.vstack([bin_assignment, fitness])
@@ -21,8 +21,8 @@ def niche_compete(fitness, features, archive, domain, config):
     for f in range(num_features - 1, -1, -1):
         idy = bin_fitness[f, :].argsort(kind='mergesort')
         bin_fitness = bin_fitness[:, idy]
-        idx = idx[idy]    
-    unq, ind = np.unique(bin_fitness[0:2,:], return_inverse=False, return_index=True, axis=1)    
+        idx = idx[idy]
+    unq, ind = np.unique(bin_fitness[0:2,:], return_inverse=False, return_index=True, axis=1)
     best_index = idx[ind]
     best_bin = bin_assignment[:, best_index]
 
@@ -30,7 +30,7 @@ def niche_compete(fitness, features, archive, domain, config):
     replaced = []
     replacement = []
     for f in range(len(best_index)):
-        archive_fitness = archive.get('fitness')
+        archive_fitness = archive['fitness']
         bin_fitness = archive_fitness[best_bin[0,f],best_bin[1,f]]
         if np.isnan(bin_fitness) or bin_fitness < fitness[best_index[f]]:
             replacement.append(best_index[f])
