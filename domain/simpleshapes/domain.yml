@@ -1,0 +1,7 @@
+name: simpleshapes
+features: [0,1]
+dof: 16
+nfeatures: 2
+par_ranges: [[-6, -6],[6, 6]]
+feat_ranges: [[0, 0],[1, 1]]
+fit_range: [0, 1]
