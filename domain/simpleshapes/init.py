@@ -10,5 +10,5 @@ def do(ninit_samples):
     y1 = radius*np.sin(t)
     domain['base'] = [x1,y1]
     random_pop = np.random.rand(ninit_samples,domain['dof'])
-    # random_pop = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0]])
+    random_pop = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0]])
     return domain, random_pop
