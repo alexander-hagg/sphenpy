@@ -1,7 +1,6 @@
-import sys
 import yaml
 import time
-import numpy as np
+
 from qd.mapelites import qd, visualize
 # from domain.random import init, fitness_fun
 from domain.rastrigin import init, fitness_fun
