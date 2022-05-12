@@ -1,6 +1,6 @@
 import numpy as np
 
-def fitness_fun(population, domain):
+def get(population, domain):
     features = population
     features[features > 1] = 1
     features[features < 0] = 0

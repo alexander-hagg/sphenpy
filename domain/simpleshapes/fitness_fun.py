@@ -1,29 +1,29 @@
 import numpy as np
 from domain.simpleshapes import express
+from util import maptorange
 from scipy.spatial.distance import euclidean
 from shapely.geometry import Polygon
 import shapely.validation
 import matplotlib.pyplot as plt
 
+
 def get(population, domain):
     # Express shapes
     phenotypes = express.do(population, domain)
+    fitness = []
+    features = []
     for i in range(len(phenotypes)):
         area = get_area_of_polygon(phenotypes[i])
-        print(f'Area: {area}')
-        # Circumference
         perimeter = get_perimeter(phenotypes[i])
-        print(f'perimeter: {perimeter}')
-        # Mirror symmetry
-        fitness = get_mirrorsymmetry(phenotypes[i])
-        print(f'symmetry fitness: {fitness}')
+        symmetry = get_mirrorsymmetry(phenotypes[i])
+        features.append([area, perimeter])
+        fitness.append(symmetry)
 
-        features = [area, perimeter]
-        # features[features > 1] = 1
-        # features[features < 0] = 0
-        # fitrange = np.array(domain['fit_range'])
-        # fitness = (fitness - fitrange[0])/(fitrange[1]-fitrange[0])
-        # features = np.transpose(features)
+    features = np.asarray(features)
+    for i in range(domain['nfeatures']):
+        features[:,i] = maptorange.do(features[:,i], domain['feat_ranges'][0][i], domain['feat_ranges'][1][i])    
+    features = np.transpose(features)
+    fitness = maptorange.do(fitness, domain['fit_range'][0], domain['fit_range'][1])
     return fitness, features
 
 

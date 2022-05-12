@@ -1,4 +1,4 @@
-def update_map(replaced, replacement, archive, fitness, genes, features):
+def update_archive(replaced, replacement, archive, fitness, genes, features):
     # Update fitness values
     a_fitness = archive['fitness']
     for f in range(len(replaced)):
@@ -16,5 +16,5 @@ def update_map(replaced, replacement, archive, fitness, genes, features):
     for f in range(len(replaced)):
         a_genes[replaced[f][0],replaced[f][1],:] = genes[replacement[f],:]
     archive.update({'genes': a_genes})
-
+    
     return archive

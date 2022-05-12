@@ -1,6 +1,6 @@
 import numpy as np
 
-def fitness_fun(population, domain):
+def get(population, domain):
     fitness = np.random.rand(population.shape[0])
     fitness[fitness > 1] = 1
     fitness[fitness < 0] = 0
