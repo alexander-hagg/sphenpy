@@ -5,7 +5,7 @@ from scipy import interpolate
 
 
 def do(genomes, domain):
-    npoints = 100
+    npoints = 9
     phenotypes = []
     for i in range(genomes.shape[0]):
         middle = int(len(genomes[i])/2)
@@ -13,12 +13,12 @@ def do(genomes, domain):
         rho = rho * genomes[i,:middle]
         phi = phi + genomes[i,middle:]
         x, y = pol2cart(rho, phi)
-        np.append(x, x[0])
-        np.append(y, y[0])
-        tck, u = interpolate.splprep([x, y], s=0, per=True)
+        x = np.append(x, x[0])
+        y = np.append(y, y[0])
+        tck, u = interpolate.splprep([x, y], s=0, k=3, per=True)
         x, y = interpolate.splev(np.linspace(0, 1, npoints), tck)
         phenotypes.append(np.asarray([x, y]))
-    # visualize(x, y)
+        # visualize(x, y)
     return phenotypes
 
 def visualize(x, y):
