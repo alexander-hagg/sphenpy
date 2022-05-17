@@ -14,4 +14,5 @@ def get(population, domain):
     fitness = 20 + x**2 - 10 * np.cos(2 * np.pi * x) + y**2 - 10 * np.cos(2* np.pi * y)
 
     fitness = maptorange.do(fitness, domain['fit_range'][0], domain['fit_range'][1])
+    fitness = np.transpose([fitness])
     return fitness, features

@@ -14,7 +14,7 @@ def niche_compete(fitness, features, archive, domain, config):
 
     ## Find highest fitness per bin
     # Sort bins by fitness, then by bin coordinates
-    bin_fitness = np.hstack([bin_assignment, np.transpose([fitness])])
+    bin_fitness = np.hstack([bin_assignment, fitness])
     num_features = bin_assignment.shape[1]
     idx = (-1*bin_fitness[num_features, :]).argsort()
     bin_fitness = bin_fitness[:, idx]

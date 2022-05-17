@@ -3,8 +3,8 @@ import time
 import matplotlib.pyplot as plt
 
 from qd.mapelites import qd, visualize, visualize_phenotypes
-# from domain.rastrigin import init, fitness_fun, express
-from domain.simpleshapes import init, fitness_fun, express
+from domain.rastrigin import init, fitness_fun, express
+# from domain.simpleshapes import init, fitness_fun, express
 
 # Configuration of QD, domain and initial population
 config = yaml.safe_load(open("qd/mapelites/config.yml"))

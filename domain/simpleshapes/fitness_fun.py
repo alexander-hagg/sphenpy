@@ -23,6 +23,7 @@ def get(population, domain):
     for i in range(domain['nfeatures']):
         features[:,i] = maptorange.do(features[:,i], domain['feat_ranges'][0][i], domain['feat_ranges'][1][i])    
     fitness = maptorange.do(fitness, domain['fit_range'][0], domain['fit_range'][1])
+    fitness = np.transpose([fitness])
     return fitness, features
 
 
