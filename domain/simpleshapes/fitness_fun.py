@@ -22,7 +22,6 @@ def get(population, domain):
     features = np.asarray(features)
     for i in range(domain['nfeatures']):
         features[:,i] = maptorange.do(features[:,i], domain['feat_ranges'][0][i], domain['feat_ranges'][1][i])    
-    features = np.transpose(features)
     fitness = maptorange.do(fitness, domain['fit_range'][0], domain['fit_range'][1])
     return fitness, features
 
@@ -44,22 +43,8 @@ def get_mirrorsymmetry(points):
     p1 = Polygon(points)
     points[:,1] = -points[:,1]
     p2 = Polygon(points)
-    # plt.axis('equal')
-    # ax = plt.gca()
-    # plt.grid()
-    # ax.set_xlim([-1, 1])
-    # ax.set_ylim([-1, 1])
-    # plt.show()
     if not p1.is_valid or not p2.is_valid:
-        # print(shapely.validation.explain_validity(p1))
-        # plt.plot(*p1.exterior.xy)
-        # plt.plot(*p2.exterior.xy)
-        # plt.show()
         p1 = shapely.validation.make_valid(p1)
         p2 = shapely.validation.make_valid(p2)
     p3 = p1.intersection(p2)
-    # print(p3.is_valid)
-    # print(p3.area)
-    # plt.plot(*p3.exterior.xy)
-    # plt.show()
     return p3.area/p1.area

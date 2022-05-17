@@ -8,7 +8,7 @@ def update_archive(replaced, replacement, archive, fitness, genes, features):
     # Update feature values
     a_features = archive['features']
     for f in range(len(replaced)):
-        a_features[:,replaced[f][0],replaced[f][1]] = features[:,replacement[f]]
+        a_features[replaced[f][0],replaced[f][1], :] = features[replacement[f], :]
     archive.update({'features': a_features})
 
     # Update gene values

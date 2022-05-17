@@ -5,24 +5,32 @@ from scipy import interpolate
 
 
 def do(genomes, domain):
-    npoints = 51
     phenotypes = []
     for i in range(genomes.shape[0]):
-        middle = int(len(genomes[i])/2)
-        rho, phi = cart2pol(domain['base'][0], domain['base'][1])
-        rho = rho * genomes[i,:middle]
-        phi = phi + genomes[i,middle:]
-        x, y = pol2cart(rho, phi)
-        x = np.append(x, x[0])
-        y = np.append(y, y[0])
-
-        tck, u = interpolate.splprep([x, y], s=0, k=3, per=True)
-        x, y = interpolate.splev(np.linspace(0, 1, npoints), tck)
-        phenotypes.append(np.asarray([x, y]))
+        phenotype = express_single(genomes[i], domain)
+        phenotypes.append(phenotype)
     return phenotypes
 
+def express_single(genome, domain):
+    if (np.isnan(genome)).any():
+        return None
+    npoints = 51
+    middle = int(len(genome)/2)
+    rho, phi = cart2pol(domain['base'][0], domain['base'][1])
+    rho = rho * genome[:middle]
+    phi = phi + genome[middle:]
+    x, y = pol2cart(rho, phi)
+    x = np.append(x, x[0])
+    y = np.append(y, y[0])
+    tck, u = interpolate.splprep([x, y], s=0, k=3, per=True)
+    x, y = interpolate.splev(np.linspace(0, 1, npoints), tck)
+    return np.asarray([x, y])
+
+def visualize_raw(phenotype, color=[0, 0, 0]):
+    plt.fill(phenotype[0], phenotype[1], color=color)
+    
 def visualize(phenotype):
-    plt.scatter(phenotype[0], phenotype[1])
+    visualize_raw(phenotype)
     plt.axis('equal')
     ax = plt.gca()
     ax.set_xlim([-1, 1])

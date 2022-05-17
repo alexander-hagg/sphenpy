@@ -8,4 +8,8 @@ from domain.simpleshapes import init, fitness_fun, express
 config = yaml.safe_load(open("qd/mapelites/config.yml"))
 domain, random_pop = init.do(config.get('init_samples'))
 
-fitness_fun.get(random_pop, domain)
+fitness, features = fitness_fun.get(random_pop, domain)
+print(fitness)
+
+phenotypes = express.do(random_pop, domain)
+express.visualize(phenotypes[0])
