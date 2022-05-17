@@ -1,6 +1,9 @@
 name: rastrigin
 features: [0,1]
+labels: ['x', 'y']
 dof: 2
 nfeatures: 2
 par_ranges: [[-6, -6],[6, 6]]
+feat_ranges: [[-6, -6],[6, 6]]
 fit_range: [0, 100]
+plotscale: False

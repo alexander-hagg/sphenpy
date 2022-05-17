@@ -1,4 +1,4 @@
-resolution: 50
+resolution: 100
 num_gens: 50
 num_children: 32
 mut_sigma: 0.1

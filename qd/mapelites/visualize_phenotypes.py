@@ -1,7 +1,10 @@
 import matplotlib.pyplot as plt
 
 def plot(archive, express, domain, config):
-    scale = 2*config['resolution']
+    if domain['plotscale']:
+        scale = 2*config['resolution']
+    else:
+        scale = 1
     for i in range(archive['genes'].shape[0]):
         for j in range(archive['genes'].shape[1]):
             genome = archive['genes'][i,j,:]

@@ -1,8 +1,9 @@
 import yaml
 import time
+import matplotlib.pyplot as plt
 
 from qd.mapelites import qd, visualize, visualize_phenotypes
-# from domain.rastrigin import init, fitness_fun
+# from domain.rastrigin import init, fitness_fun, express
 from domain.simpleshapes import init, fitness_fun, express
 
 # Configuration of QD, domain and initial population
@@ -15,8 +16,4 @@ archive = qd.evolve(random_pop, config, domain, fitness_fun)
 print(f'Time elapsed: {time.time() - start:.2}s.')
 # visualize.plot(archive)
 visualize_phenotypes.plot(archive, express, domain, config)
-
-# print(archive['genes'][0])
-# express.do(archive['genes'][0], domain)
-
 
