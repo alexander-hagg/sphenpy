@@ -17,4 +17,6 @@ def plot(archive, express, domain, config):
     plt.axis('equal')
     plt.xlabel(domain['labels'][domain['features'][0]])
     plt.ylabel(domain['labels'][domain['features'][1]])
+    cbar = plt.colorbar()
+    cbar.set_label(domain['labels'][-1])    
     plt.show()
