@@ -14,6 +14,6 @@ domain, random_pop = init.do(config.get('init_samples'))
 start = time.time()
 archive = qd.evolve(random_pop, config, domain, fitness_fun)
 print(f'Time elapsed: {time.time() - start:.2}s.')
-visualize.plot(archive, domain)
-# visualize_phenotypes.plot(archive, express, domain, config)
+# visualize.plot(archive, domain)
+visualize_phenotypes.plot(archive, express, domain, config)
 
