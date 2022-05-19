@@ -13,8 +13,8 @@ def get(population, domain):
     fitness = []
     features = []
     for i in range(len(phenotypes)):
-        area = get_area_of_polygon(phenotypes[i])
-        perimeter = get_perimeter(phenotypes[i])
+        area = phenotypes[i].area
+        perimeter = phenotypes[i].length
         symmetry = get_mirrorsymmetry(phenotypes[i])
         features.append([area, perimeter])
         fitness.append(symmetry)
@@ -26,26 +26,20 @@ def get(population, domain):
     fitness = np.transpose([fitness])
     return fitness, features
 
-
-def get_area_of_polygon(points):
-    """Calculates the area of an arbitrary polygon given its vertices"""
-    points = np.transpose(points)
-    p1 = Polygon(points)
-    return p1.area
-
-
-def get_perimeter(points):
+def get_perimeter(polygon):
     """ returns the length of a polygon's perimeter defined by an ndarray of (x,y) coordinates """
-    perimeter = np.sum([euclidean(x, y) for x, y in zip(points, points[1:])])
-    return perimeter
+    if polygon.type == 'MultiPolygon' or polygon.type == 'GeometryCollection':
+        print("MP or GC")
+        print(polygon.length)
+    else:
+        print("P")
+        print(polygon.exterior.length)
+        print(polygon.length)
+    # perimeter = np.sum([euclidean(x, y) for x, y in zip(points, points[1:])])
+    return polygon.length
 
-def get_mirrorsymmetry(points):
-    points = np.transpose(points)
-    p1 = Polygon(points)
-    points[:,1] = -points[:,1]
-    p2 = Polygon(points)
-    if not p1.is_valid or not p2.is_valid:
-        p1 = shapely.validation.make_valid(p1)
-        p2 = shapely.validation.make_valid(p2)
-    p3 = p1.intersection(p2)
-    return p3.area/p1.area
+def get_mirrorsymmetry(polygon):
+    polygon_mirrored = shapely.affinity.scale(polygon, xfact=1.0, yfact=-1.0, origin='centroid')
+    polygon_mirrored = shapely.validation.make_valid(polygon_mirrored)
+    inters = polygon.intersection(polygon_mirrored)
+    return inters.area/polygon.area

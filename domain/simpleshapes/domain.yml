@@ -4,6 +4,7 @@ labels: ['area', 'circumference', 'mirrorsymmetry']
 dof: 16
 nfeatures: 2
 par_ranges: [[0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.38, -0.38, -0.38, -0.38, -0.38, -0.38, -0.38, -0.38],[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38]]
-feat_ranges: [[0, 0],[0.8, 6]]
+feat_ranges: [[0, 0],[0.8, 6]] # feat_ranges: [[0.1, 2],[0.6, 3]]
+
 fit_range: [0, 1]
 plotscale: True
