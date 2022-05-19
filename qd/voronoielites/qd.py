@@ -6,7 +6,7 @@ import qd.voronoielites.create_children as cc
 def evolve(init, config, domain, ff):
     # Initialization
     archive = ca.create_archive(domain, config)
-    fitness, features = ff.get(init, domain)
+    fitness, features = ff(init)
     archive = update.update_archive(archive, init, features, fitness, config, domain)
     
     # Evolution
@@ -18,7 +18,7 @@ def evolve(init, config, domain, ff):
             new_children = cc.create_children(archive, domain, config)
             children = np.vstack([children, new_children]) if children.size else new_children
 
-        fitness, features = ff.get(children, domain)
+        fitness, features = ff(children)
         archive = update.update_archive(archive, children, features, fitness, config, domain)
     
     return archive

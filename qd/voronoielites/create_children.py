@@ -17,7 +17,7 @@ def create_children(archive, domain, config):
     children = children + mutation
     
     # Check ranges
-    print("TODO: check parameter ranges")
+    # print("TODO: check parameter ranges")
     # print('Checking ranges')
     # print(children>ranges[1])
     # print(children<ranges[0])
