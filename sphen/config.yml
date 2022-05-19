@@ -1,0 +1,4 @@
+num_updates: 200
+num_samples: 32
+init_samples: 50
+ucb: 10

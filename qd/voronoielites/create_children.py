@@ -3,7 +3,6 @@ import numpy as np
 def create_children(archive, domain, config):
     # Randomly select parents and copy to children
     pool = archive['genes']
-    pool = pool.reshape((pool.shape[0], pool.shape[1]))
 
     # Remove empty genomes
     invalid = np.isnan(pool).any(axis=1)
@@ -18,6 +17,7 @@ def create_children(archive, domain, config):
     children = children + mutation
     
     # Check ranges
+    print("TODO: check parameter ranges")
     # print('Checking ranges')
     # print(children>ranges[1])
     # print(children<ranges[0])
