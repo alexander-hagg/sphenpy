@@ -1,5 +1,4 @@
-num_updates: 200
-num_samples: 32
-init_samples: 50
-total_samples: 100
-ucb: 10
+num_samples: 10
+init_samples: 100
+total_samples: 200
+exploration_factor: 10

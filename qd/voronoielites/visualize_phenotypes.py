@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 def plot(archive, express, domain, config):
     fig = plt.figure() 
@@ -13,6 +14,10 @@ def plot(archive, express, domain, config):
             dx = archive['features'][i,0]
             dy = archive['features'][i,1]
             fitness = archive['fitness'][i][0]
+            if fitness>1.0:
+                fitness = 1.0
+            elif fitness<0.0:
+                fitness = 0.0
             # express.visualize_raw([phenotype[0]+dx*scale, phenotype[1]+dy*scale], [1-fitness, fitness, 0])
             express.visualize_raw(phenotype, [1-fitness, fitness, 0], dx*scale, dy*scale)
     plt.axis('equal')

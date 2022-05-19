@@ -4,7 +4,6 @@ import numpy as np
 
 
 def train(observation, targets):
-    # GPy.plotting.change_plotting_library('plotly')
     models = []
     for i in range(len(targets)):
         kernel = GPy.kern.RBF(input_dim=observation.shape[1], variance=1., lengthscale=1.)
@@ -17,13 +16,11 @@ def predict(observation, model):
     mu, sigma = model.predict(observation)
     return mu
 
-def ucb(observation, models):
-    w = 10
+def ucb(observation, models, exploration_factor):
     mu0, sigma0 = models[0].predict(observation)
     mu1, sigma = models[1].predict(observation)
     mu2, sigma = models[2].predict(observation)
 
-    ucb = mu0 + w * sigma0
+    ucb = mu0 + exploration_factor * sigma0
     features = np.transpose(np.squeeze(np.asarray([mu1, mu2])))
-    # print(f'features.shape: {features.shape}')
     return ucb, features
