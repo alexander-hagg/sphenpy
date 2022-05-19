@@ -1,6 +1,8 @@
 import numpy as np
 import math
 import yaml
+from scipy.stats import qmc
+
 
 def do(ninit_samples):
     domain = yaml.safe_load(open("domain/simpleshapes/domain.yml"))
@@ -9,6 +11,9 @@ def do(ninit_samples):
     x1 = radius*np.cos(t)
     y1 = radius*np.sin(t)
     domain['base'] = [x1,y1]
-    random_pop = np.random.rand(ninit_samples,domain['dof'])
+    # random_pop = np.random.rand(ninit_samples,domain['dof'])
+    sampler = qmc.Sobol(d=domain['dof'], scramble=True)
+    random_pop = sampler.random(ninit_samples)
+
     # random_pop = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0]])
     return domain, random_pop
