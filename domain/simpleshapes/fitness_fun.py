@@ -26,18 +26,6 @@ def get(population, domain):
     fitness = np.transpose([fitness])
     return fitness, features
 
-def get_perimeter(polygon):
-    """ returns the length of a polygon's perimeter defined by an ndarray of (x,y) coordinates """
-    if polygon.type == 'MultiPolygon' or polygon.type == 'GeometryCollection':
-        print("MP or GC")
-        print(polygon.length)
-    else:
-        print("P")
-        print(polygon.exterior.length)
-        print(polygon.length)
-    # perimeter = np.sum([euclidean(x, y) for x, y in zip(points, points[1:])])
-    return polygon.length
-
 def get_mirrorsymmetry(polygon):
     polygon_mirrored = shapely.affinity.scale(polygon, xfact=1.0, yfact=-1.0, origin='centroid')
     polygon_mirrored = shapely.validation.make_valid(polygon_mirrored)
