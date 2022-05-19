@@ -1,6 +1,0 @@
-name: debug
-features: [0,1]
-dof: 4
-nfeatures: 2
-par_ranges: [[0, 0, 0, 0],[100, 100, 5, 5]]
-fit_range: [-5, 5]
