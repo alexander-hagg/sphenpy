@@ -1,7 +1,5 @@
 import numpy as np
 import yaml
-import GPy
-from IPython.display import display
 from scipy.stats import qmc
 
 import sphen.surrogates as surrogates
@@ -28,6 +26,9 @@ def evolve(samples, config, domain, ff):
         # Train surrogate models
         models = surrogates.train(observation, [fitness, features[:,0][np.newaxis].T, features[:,1][np.newaxis].T])
         
+        if observation.shape[0] >= total_samples:
+            break
+
         # Evolve archive with acquisition function
         ucbfitfun = lambda x: surrogates.ucb(x, models, config['exploration_factor'])        
         archive = qd.evolve(observation, qdconfig, domain, ucbfitfun)

@@ -1,5 +1,4 @@
 import GPy
-from IPython.display import display
 import numpy as np
 
 

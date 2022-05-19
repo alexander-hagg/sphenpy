@@ -1,10 +1,7 @@
 import numpy as np
 from domain.simpleshapes import express
 from util import maptorange
-from scipy.spatial.distance import euclidean
-from shapely.geometry import Polygon
 import shapely.validation
-import matplotlib.pyplot as plt
 
 
 def get(population, domain):

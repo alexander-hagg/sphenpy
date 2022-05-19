@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-import numpy as np
+
 
 def plot(archive, express, domain, config):
     fig = plt.figure() 

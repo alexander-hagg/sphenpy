@@ -1,6 +1,5 @@
 import yaml
 import time
-import matplotlib.pyplot as plt
 
 from sphen import sphen
 from qd.voronoielites import visualize, visualize_phenotypes
