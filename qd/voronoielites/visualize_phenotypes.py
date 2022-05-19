@@ -23,4 +23,7 @@ def plot(archive, express, domain, config):
     plt.axis('equal')
     plt.xlabel(domain['labels'][domain['features'][0]])
     plt.ylabel(domain['labels'][domain['features'][1]])
-    plt.show()
+    plt.xlim([0, 2*scale])
+    plt.ylim([0, 2*scale])
+    # plt.show()
+    return plt

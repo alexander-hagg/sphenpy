@@ -5,8 +5,8 @@ import qd.voronoielites.create_children as cc
 
 def evolve(init, config, domain, ff):
     # Initialization
-    archive = ca.create_archive(domain, config)
     fitness, features = ff(init)
+    archive = ca.create_archive(domain, config)
     archive = update.update_archive(archive, init, features, fitness, config, domain)
     
     # Evolution
