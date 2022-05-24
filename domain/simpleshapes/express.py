@@ -29,26 +29,35 @@ def express_single(genome, domain):
     points = np.transpose(np.asarray([x, y]))
     p1 = Polygon(points)
     p1 = shapely.validation.make_valid(p1)
+    if p1.type == 'MultiPolygon' or p1.type == 'GeometryCollection':
+        p1 = reduce_multipolygon_to_polygon(p1)
     return p1
+
+def reduce_multipolygon_to_polygon(polygon):
+    areas = []
+    for i in range(len(polygon.geoms)):
+        areas.append(polygon.geoms[i].area)
+    return polygon.geoms[np.argmax(areas)]
 
 def visualize_raw(phenotype, color=[0, 0, 0], dx=0, dy=0):
     if phenotype.type == 'Polygon':
         x, y = zip(*list(phenotype.exterior.coords))
-        plt.fill(x+dx, y+dy, color=color)
+        plt.fill(np.add(x, dx), np.add(y, dy), color=color)
     if phenotype.type == 'MultiPolygon':
         for i in range(len(phenotype.geoms)):
             x, y = zip(*list(phenotype.geoms[i].exterior.coords))
-            plt.fill(x+dx, y+dy, color=color)
+            plt.fill(np.add(x, dx), np.add(y, dy), color=color)
     if phenotype.type == 'GeometryCollection':
         for i in range(len(phenotype.geoms)):
             if not phenotype.geoms[i].type == 'Point' and not phenotype.geoms[i].type == 'LineString':
                 if phenotype.geoms[i].type == 'MultiPolygon':
                     for j in range(len(phenotype.geoms[i].geoms)):
                         x, y = zip(*list(phenotype.geoms[i].geoms[j].exterior.coords))
-                        plt.fill(x+dx, y+dy, color=color)
+                        plt.fill(np.add(x, dx), np.add(y, dy), color=color)
                 else:
                     x, y = zip(*list(phenotype.geoms[i].exterior.coords))
-                    plt.fill(x+dx, y+dy, color=color)
+                    plt.fill(np.add(x, dx), np.add(y, dy), color=color)
+    return plt
 
     
 def visualize(phenotype):
