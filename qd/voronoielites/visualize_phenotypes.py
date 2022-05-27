@@ -4,7 +4,7 @@ import math
 def plot(archive, express, domain, config):
     fig = plt.figure() 
     if domain['plotscale']:
-        scale = 100 #math.sqrt(config['resolution'])
+        scale = 50 #math.sqrt(config['resolution'])
     else:
         scale = 1
     phenotypes = express.do(archive['genes'], domain)
