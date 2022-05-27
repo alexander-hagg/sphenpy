@@ -7,7 +7,7 @@ from qd.voronoielites import visualize, visualize_phenotypes
 from domain.simpleshapes import init, fitness_fun, express
 
 
-domain, random_pop = init.do(5)
+domain, random_pop = init.do(1)
 
 fitness, features = fitness_fun.get(random_pop, domain)
 
