@@ -15,14 +15,13 @@ def create_children(archive, domain, config):
     mutation = np.random.randn(config['num_children'],domain['dof']) * config['mut_sigma']
     mutation = mutation * (ranges[1]-ranges[0])
     children = children + mutation
-    
-    # Check ranges
-    # print("TODO: check parameter ranges")
-    # print('Checking ranges')
-    # print(children>ranges[1])
-    # print(children<ranges[0])
 
-    # children[children>1.0] = 1.
-    # children[children<0.0] = 0.
+    # Limit ranges
+    toolow = children < ranges[0]
+    toohigh = children > ranges[1]
+    rangelowvalues = np.tile(ranges[0], (config['num_children'], 1))
+    rangehighvalues = np.tile(ranges[1], (config['num_children'], 1))
+    children[toolow] = rangelowvalues[toolow]
+    children[toohigh] = rangehighvalues[toohigh]
 
     return children
