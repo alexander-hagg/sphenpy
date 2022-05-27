@@ -38,8 +38,9 @@ def evolve(samples, config, domain, ff):
         emitter_points = sampler.random(config['num_samples'])
         distances = cdist(emitter_points, features)
         selection = np.argmin(distances, axis=1)
-        
-        sel_observation = archive['genes'][selection]
+        sel_observation = observation[selection]
+
+        # Get ground truth fitness and add samples to the observation set
         sel_fitness, sel_features = ff.get(sel_observation, domain)
         observation = np.vstack([observation, sel_observation])
         fitness = np.vstack([fitness, sel_fitness])
