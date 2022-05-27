@@ -42,23 +42,11 @@ def reduce_multipolygon_to_polygon(polygon):
 def visualize_raw(phenotype, color=[0, 0, 0], dx=0, dy=0):
     if phenotype.type == 'Polygon':
         x, y = zip(*list(phenotype.exterior.coords))
-        plt.fill(np.add(x, dx), np.add(y, dy), color=color)
-    if phenotype.type == 'MultiPolygon':
+        plt.fill(np.add(x, dx), np.add(y, dy), facecolor=color, edgecolor=None, linewidth=0.2)
+    if phenotype.type == 'GeometryCollection' or phenotype.type == 'MultiPolygon':
         for i in range(len(phenotype.geoms)):
-            x, y = zip(*list(phenotype.geoms[i].exterior.coords))
-            plt.fill(np.add(x, dx), np.add(y, dy), color=color)
-    if phenotype.type == 'GeometryCollection':
-        for i in range(len(phenotype.geoms)):
-            if not phenotype.geoms[i].type == 'Point' and not phenotype.geoms[i].type == 'LineString':
-                if phenotype.geoms[i].type == 'MultiPolygon':
-                    for j in range(len(phenotype.geoms[i].geoms)):
-                        x, y = zip(*list(phenotype.geoms[i].geoms[j].exterior.coords))
-                        plt.fill(np.add(x, dx), np.add(y, dy), color=color)
-                else:
-                    x, y = zip(*list(phenotype.geoms[i].exterior.coords))
-                    plt.fill(np.add(x, dx), np.add(y, dy), color=color)
+            visualize_raw(phenotype.geoms[i], color=color, dx=dx, dy=dy)
     return plt
-
     
 def visualize(phenotype):
     visualize_raw(phenotype)
