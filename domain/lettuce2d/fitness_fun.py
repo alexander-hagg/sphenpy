@@ -66,9 +66,10 @@ def get_flowfeatures(polygon, resolution):
 
     building = imageio.imread('data/building.bmp')
     building = building.astype(bool)
+    building = np.rot90(building, 3)
 
     #Time period of the simulation
-    max_t=5 # 30.0
+    max_t=30.0
 
     #Diameter of the Building
     D=resolution
