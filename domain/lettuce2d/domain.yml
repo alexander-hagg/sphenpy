@@ -1,10 +1,12 @@
-name: simpleshapes
-features: [0,1]
-labels: ['area', 'circumference', 'mirrorsymmetry']
+name: lettuce2d
+features: [0,2]
+labels: ['area', 'circumference', 'enstrophy', 'umax']
 dof: 16
-nfeatures: 2
 par_ranges: [[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, -0.38, -0.38, -0.38, -0.38, -0.38, -0.38, -0.38, -0.38],[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38]]
-feat_ranges: [[0.0, 0.0],[0.5, 3]] # feat_ranges: [[0.1, 2],[0.6, 3]]
-
-fit_range: [0, 1]
+feat_ranges: [[0.0, 0.0, 0.0, 0.0],[0.5, 3, 1000, 4.0]] # feat_ranges: [[0.1, 2],[0.6, 3]]
+bitmap_resolution: 64
+fit_range: [0.0, 1.0]
 plotscale: True
+max_t: 10.0
+report_interval: 100
+mean_interval: 100

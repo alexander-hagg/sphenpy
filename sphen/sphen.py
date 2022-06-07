@@ -11,13 +11,14 @@ def evolve(samples, config, domain, ff):
     # Get true values for sample set
     observation = samples
     fitness, features = ff.get(samples, domain)
+    features = features[:,domain['features']]
     total_samples = config['total_samples']
 
     # Setup internal QD algorithm
     qdconfig = yaml.safe_load(open("qd/voronoielites/config.yml"))
     
     # Setup Sobol sampler
-    sampler = qmc.Sobol(d=domain['nfeatures'], scramble=True)
+    sampler = qmc.Sobol(d=len(domain['features']), scramble=True)
             
     # Sampling loop
     while observation.shape[0] <= total_samples:
@@ -42,6 +43,7 @@ def evolve(samples, config, domain, ff):
 
         # Get ground truth fitness and add samples to the observation set
         sel_fitness, sel_features = ff.get(sel_observation, domain)
+        sel_features = sel_features[:,domain['features']]
         observation = np.vstack([observation, sel_observation])
         fitness = np.vstack([fitness, sel_fitness])
         features = np.vstack([features, sel_features])

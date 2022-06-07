@@ -6,13 +6,16 @@ import sys
 import imageio
 import os
 import GPUtil
+import shutil
 
 from domain.lettuce2d import express
 from util import maptorange
 import shapely.validation
 import rasterio.features
 import shapely.affinity
-# import matplotlib.pyplot as plt
+
+import warnings
+warnings.filterwarnings("ignore", category=rasterio.errors.NotGeoreferencedWarning)
 
 
 class NaNReporter:
@@ -31,49 +34,46 @@ def get(population, domain):
     phenotypes = express.do(population, domain)
     fitness = []
     features = []
+
     for i in range(len(phenotypes)):
         area = phenotypes[i].area
         perimeter = phenotypes[i].length
-        flowfeatures = get_flowfeatures(phenotypes[i], 64)
-        quit()
-        features.append([area, perimeter])
-        fitness.append(flowfeatures)
+        enstrophy, umax = get_flowfeatures(phenotypes[i], domain['bitmap_resolution'], 'data', domain['max_t'], domain['report_interval'], domain['mean_interval'])
+        features.append([area, perimeter, enstrophy, umax])
 
     features = np.asarray(features)
-    for i in range(domain['nfeatures']):
+    for i in range(len(domain['feat_ranges'][0])):
         features[:,i] = maptorange.do(features[:,i], domain['feat_ranges'][0][i], domain['feat_ranges'][1][i])    
-    fitness = maptorange.do(fitness, domain['fit_range'][0], domain['fit_range'][1])
+    fitness = (1/(1+features[:,3]))*2-1 ;
     fitness = np.transpose([fitness])
     return fitness, features
 
 
-def get_flowfeatures(polygon, resolution):
-    if not os.path.exists("data"):
-        os.makedirs("data")
+def get_flowfeatures(polygon, bitmap_resolution, datadir='data', max_t=30.0, report_interval=100, mean_interval=100):
+    # Diameter of the Building
+    D = bitmap_resolution
+    
+    if not os.path.exists(datadir):
+        os.makedirs(datadir)
 
     # "cuda:0" for GPU "cpu" for CPU
-    if GPUtil.getAvailable():
+    if GPUtil.getFirstAvailable(attempts=10, interval=1):
         device=torch.device("cuda:0")
         print("Using GPU/CUDA")
     else:
         device=torch.device("cpu")
         print("Using CPU")
 
-    rasterize_to_disk(polygon, resolution)
+    rasterize_to_disk(polygon, bitmap_resolution)
     
     stencil = lt.D2Q9
     lattice = lt.Lattice(stencil,device=device,dtype=torch.float32)
 
-    building = imageio.imread('data/building.bmp')
+    building = imageio.imread(datadir + '/building.bmp')
     building = building.astype(bool)
     building = np.rot90(building, 3)
 
-    #Time period of the simulation
-    max_t=30.0
-
-    #Diameter of the Building
-    D=resolution
-
+    
     flow=lt.Obstacle2D(600,300,reynolds_number=3900,mach_number=0.075,lattice=lattice,char_length_lu=D)
 
     #Create a mask to determine the bounce back boundary of the cylinder
@@ -91,12 +91,12 @@ def get_flowfeatures(polygon, resolution):
 
     simulation=lt.Simulation(flow,lattice,collision,streaming)
 
-    #Create and append the NaN reporter to detect instabilities
+    # Create and append the NaN reporter to detect instabilities
     NaN=NaNReporter()
     simulation.reporters.append(NaN)
 
-    #If desired append a VTK reporter, reporting every n simulation steps
-    vtk_rep = lt.VTKReporter(lattice,flow,100,'./data/cylinder')
+    # If desired append a VTK reporter, reporting every n simulation steps
+    vtk_rep = lt.VTKReporter(lattice,flow,report_interval,datadir + '/cylinder')
     simulation.reporters.append(vtk_rep)
 
     from lettuce.observables import Mass, Enstrophy, MaximumVelocity
@@ -104,41 +104,52 @@ def get_flowfeatures(polygon, resolution):
     enstrophy_observable = Enstrophy(lattice,flow)
     maxU_observable = MaximumVelocity(lattice,flow)
 
-    # ORIGINAL INTERVAL: 10
-    mass_reporter = lt.ObservableReporter(mass_observable,50)
+    mass_reporter = lt.ObservableReporter(mass_observable,report_interval)
     simulation.reporters.append(mass_reporter)
 
-    f1 = open("data/enstrophy.csv", "a")
-    enstrophy_reporter = lt.ObservableReporter(enstrophy_observable,interval=50,out=f1)
+    f1 = open(datadir + '/enstrophy.csv', "a")
+    enstrophy_reporter = lt.ObservableReporter(enstrophy_observable,interval=report_interval,out=f1)
     simulation.reporters.append(enstrophy_reporter)
 
-    f2 = open("data/maxU.csv", "a")
-    maxU_reporter = lt.ObservableReporter(maxU_observable,interval=50,out=f2)
+    f2 = open(datadir + '/umax.csv', "a")
+    maxU_reporter = lt.ObservableReporter(maxU_observable,interval=report_interval,out=f2)
     simulation.reporters.append(maxU_reporter)
 
     drag_reporter = lt.ObservableReporter
 
-    print ("Simulating steps:", int(flow.units.convert_time_to_lu(max_t)))
+    # print("Simulating steps:", int(flow.units.convert_time_to_lu(max_t)))
     simulation.step(int(flow.units.convert_time_to_lu(max_t)))
-
-    # Set a checkpoint for further investigations
-    simulation.save_checkpoint('data/checkpoint')
-    #simulation.load_checkpoint('checkpoint')
 
     f1.close()
     f2.close()
 
-    print ("Setting DONE flag")
-
-    f3 = open("data/done", "a")
+    f3 = open(datadir + '/done', "a")
     f3.close()
-    return 0
 
-def rasterize_to_disk(polygon, resolution):
-    polygon = shapely.affinity.scale(polygon, xfact=resolution, yfact=resolution, zfact=1.0, origin='center')
+    data_enstrophy = np.loadtxt(datadir + '/enstrophy.csv', dtype=float)
+    data_umax = np.loadtxt(datadir + '/umax.csv', dtype=float)
+    
+    if data_enstrophy.shape[0] < mean_interval:
+        mean_interval = data_enstrophy.shape[0]
+
+    for filename in os.listdir(datadir):
+        file_path = os.path.join(datadir, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))
+
+    return np.mean(data_enstrophy[-mean_interval:,2]), np.mean(data_umax[-mean_interval:,2])
+
+
+def rasterize_to_disk(polygon, bitmap_resolution):
+    polygon = shapely.affinity.scale(polygon, xfact=bitmap_resolution, yfact=bitmap_resolution, zfact=1.0, origin='center')
     centroid_x,centroid_y = polygon.centroid.xy
-    polygon = shapely.affinity.translate(polygon, xoff=-centroid_x[0]+resolution/2, yoff=-centroid_y[0]+resolution/2, zoff=0.0)
-    img = rasterio.features.rasterize([polygon], out_shape=(resolution, resolution))
+    polygon = shapely.affinity.translate(polygon, xoff=-centroid_x[0]+bitmap_resolution/2, yoff=-centroid_y[0]+bitmap_resolution/2, zoff=0.0)
+    img = rasterio.features.rasterize([polygon], out_shape=(bitmap_resolution, bitmap_resolution))
     img *= 255
     with rasterio.Env():
         with rasterio.open("data/building.bmp", 'w',

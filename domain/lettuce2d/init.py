@@ -5,7 +5,7 @@ from scipy.stats import qmc
 
 
 def do(ninit_samples):
-    domain = yaml.safe_load(open("domain/simpleshapes/domain.yml"))
+    domain = yaml.safe_load(open("domain/lettuce2d/domain.yml"))
     radius = 0.5
     t = np.linspace(0, 2*math.pi, num=int(domain['dof']/2), endpoint=False)
     x1 = radius*np.cos(t)

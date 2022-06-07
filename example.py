@@ -18,7 +18,7 @@ start = time.time()
 archive = sphen.evolve(random_pop, config, domain, fitness_fun)
 print(f'Time elapsed: {time.time() - start:.2}s.')
 
-with open('archive_sphen.pkl', 'wb') as f:
+with open('archive_sphen_lettuce.pkl', 'wb') as f:
     pickle.dump(archive, f)
 
 # Visualization of archive (fitness and phenotypes)
