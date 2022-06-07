@@ -18,5 +18,5 @@ def update_archive(archive, genes, features, fitness, config, domain):
     archive.update({'genes': all_genomes})
     archive.update({'features': all_features})
     archive.update({'fitness': all_fitness})
-    
+
     return archive
