@@ -11,9 +11,11 @@ def do(ninit_samples):
     x1 = radius*np.cos(t)
     y1 = radius*np.sin(t)
     domain['base'] = [x1,y1]
-    # random_pop = np.random.rand(ninit_samples,domain['dof'])
     sampler = qmc.Sobol(d=domain['dof'], scramble=True)
     random_pop = sampler.random(ninit_samples)
-
-    # random_pop = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0]])
+    # Project sampling to parameter ranges
+    ranges = np.asarray(domain['par_ranges'])
+    random_pop = np.multiply(random_pop, (ranges[1] - ranges[0])) + ranges[0]
+    
+    # random_pop = np.array([[0.9, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 0, 0, 0, 0, 0, 0]])
     return domain, random_pop

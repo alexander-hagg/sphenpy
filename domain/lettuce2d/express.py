@@ -41,7 +41,9 @@ def reduce_multipolygon_to_polygon(polygon):
 
 def visualize_raw(phenotype, color=[0, 0, 0], dx=0, dy=0):
     if phenotype.type == 'Polygon':
-        x, y = zip(*list(phenotype.exterior.coords))
+        tx, ty = zip(*list(phenotype.exterior.coords))
+        x = tuple([yy for yy in ty])
+        y = tuple([-1.0*xx for xx in tx])
         plt.fill(np.add(x, dx), np.add(y, dy), facecolor=color, edgecolor=None, linewidth=0.2)
     if phenotype.type == 'GeometryCollection' or phenotype.type == 'MultiPolygon':
         for i in range(len(phenotype.geoms)):
@@ -54,6 +56,18 @@ def visualize(phenotype):
     ax = plt.gca()
     ax.set_xlim([-1, 1])
     ax.set_ylim([-1, 1])
+    plt.show()
+
+def visualize_multiple(phenotypes):
+    fig, axs = plt.subplots(len(phenotypes))
+    for i in range(len(phenotypes)):
+        plt.sca(axs[i])
+        visualize_raw(phenotypes[i])
+        # plt.sca(axs[i]).axis('equal')
+        plt.axis('equal')
+        ax = plt.gca()
+        ax.set_xlim([-0.5, 0.5])
+        ax.set_ylim([-0.5, 0.5])
     plt.show()
 
 def cart2pol(x, y):

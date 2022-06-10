@@ -6,8 +6,8 @@ import pickle
 
 sys.path.insert(1, '/home/alex/sphenpy')
 from qd.voronoielites import qd, visualize, visualize_phenotypes
-from domain.rastrigin import init, fitness_fun, express
-# from domain.simpleshapes import init, fitness_fun, express
+# from domain.rastrigin import init, fitness_fun, express
+from domain.simpleshapes import init, fitness_fun, express
 
 # Configuration of QD, domain and initial population
 config = yaml.safe_load(open("qd/voronoielites/config.yml"))
@@ -27,5 +27,5 @@ print(f'Time elapsed: {time.time() - start:.2}s.')
 # Visualization of archive (fitness and phenotypes)
 figure = visualize.plot(archive, domain)
 figure.savefig('results/VE fitness', dpi=600)
-# figure = visualize_phenotypes.plot(archive, express, domain, config)
-# figure.savefig('results/VE phenotypes', dpi=600)
+figure = visualize_phenotypes.plot(archive, express, domain, config)
+figure.savefig('results/VE phenotypes', dpi=600)

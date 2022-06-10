@@ -1,4 +1,4 @@
 num_samples: 10
-init_samples: 20
-total_samples: 100
+init_samples: 10
+total_samples: 500
 exploration_factor: 20

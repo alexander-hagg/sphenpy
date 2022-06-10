@@ -2,14 +2,14 @@ import yaml
 import pickle
 import matplotlib.pyplot as plt
 from qd.voronoielites import visualize, visualize_phenotypes
-from domain.simpleshapes import init, fitness_fun, express
+from domain.lettuce2d import init, fitness_fun, express
 
 
 # Load SPHEN and domain configuration, including first population
 config = yaml.safe_load(open("sphen/config.yml"))
 domain, random_pop = init.do(config.get('init_samples'))
 
-with open('archive_sphen.pkl', 'rb') as f:
+with open('archive_sphen_lettuce.pkl', 'rb') as f:
     archive = pickle.load(f)
 
 # Visualization of archive (fitness and phenotypes)
@@ -20,6 +20,8 @@ qdconfig = yaml.safe_load(open("qd/voronoielites/config.yml"))
 figure = visualize_phenotypes.plot(archive, express, domain, qdconfig)
 figure.savefig('results/SPHEN predicted phenotypes', dpi=600)
 plt.clf()
+
+quit()
 
 # Check ground truth
 fitness, features = fitness_fun.get(archive['genes'], domain)
