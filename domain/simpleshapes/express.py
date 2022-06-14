@@ -47,7 +47,7 @@ def visualize_raw(phenotype, color=[0, 0, 0], dx=0, dy=0):
         for i in range(len(phenotype.geoms)):
             visualize_raw(phenotype.geoms[i], color=color, dx=dx, dy=dy)
     return plt
-    
+
 def visualize(phenotype):
     visualize_raw(phenotype)
     plt.axis('equal')

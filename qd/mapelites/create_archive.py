@@ -16,7 +16,7 @@ def create_archive(domain, config):
     genes = np.tile(genes, (1, 1, domain['dof']))
     features = empty_archive
     features = np.expand_dims(features, 2)
-    features = np.tile(features, (1, 1, domain['nfeatures']))
+    features = np.tile(features, (1, 1, len(domain['features'])))
 
     archive = {'edges': edges,
                'resolution': config['resolution'],

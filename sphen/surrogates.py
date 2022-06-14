@@ -11,15 +11,28 @@ def train(observation, targets):
         models.append(m)
     return models
 
+
 def predict(observation, model):
     mu, sigma = model.predict(observation)
     return mu
+
 
 def ucb(observation, models, exploration_factor):
     mu0, sigma0 = models[0].predict(observation)
     mu1, sigma = models[1].predict(observation)
     mu2, sigma = models[2].predict(observation)
+    mu0[np.where(mu0 > 1.0)] = 1.0
+    mu0[np.where(mu0 < 0.0)] = 0.0
 
     ucb = mu0 + exploration_factor * sigma0
     features = np.transpose(np.squeeze(np.asarray([mu1, mu2])))
+    # if exploration_factor == 0:
+    #     print(np.where(mu0 > 1))
     return ucb, features
+
+
+def train_multioutput(observation, targets):
+    kernel = GPy.kern.RBF(input_dim=observation.shape[1], variance=0.1, lengthscale=0.1)
+    m = GPy.models.GPMultioutRegression(observation,targets,10,kernel)
+    m.optimize_restarts(messages=False, num_restarts=10, verbose=False)
+    return m

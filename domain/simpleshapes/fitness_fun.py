@@ -17,8 +17,8 @@ def get(population, domain):
         fitness.append(symmetry)
 
     features = np.asarray(features)
-    for i in range(domain['nfeatures']):
-        features[:,i] = maptorange.do(features[:,i], domain['feat_ranges'][0][i], domain['feat_ranges'][1][i])    
+    for i in range(len(domain['feat_ranges'][0])):
+        features[:,i] = maptorange.do(features[:,i], domain['feat_ranges'][0][i], domain['feat_ranges'][1][i])
     fitness = maptorange.do(fitness, domain['fit_range'][0], domain['fit_range'][1])
     fitness = np.transpose([fitness])
     return fitness, features

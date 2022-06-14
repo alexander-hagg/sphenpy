@@ -3,7 +3,6 @@ import time
 
 from sphen import sphen
 from qd.voronoielites import visualize, visualize_phenotypes
-# from domain.rastrigin import init, fitness_fun, express
 from domain.simpleshapes import init, fitness_fun, express
 
 

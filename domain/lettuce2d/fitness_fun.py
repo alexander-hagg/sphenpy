@@ -20,10 +20,11 @@ warnings.filterwarnings("ignore", category=rasterio.errors.NotGeoreferencedWarni
 
 class NaNReporter:
     """Reports any NaN and aborts the simulation"""
+
     def __call__(self,i,t,f):
-        if torch.isnan(f).any()==True:
-            print ("NaN detected in time step ", i)
-            print ("Abort")
+        if torch.isnan(f).any():
+            print("NaN detected in time step ", i)
+            print("Abort")
             f3 = open("done", "a")
             f3.close()
             sys.exit()
@@ -43,8 +44,8 @@ def get(population, domain):
 
     features = np.asarray(features)
     for i in range(len(domain['feat_ranges'][0])):
-        features[:,i] = maptorange.do(features[:,i], domain['feat_ranges'][0][i], domain['feat_ranges'][1][i])    
-    fitness = (1/(1+features[:,3]))*2-1 ;
+        features[:,i] = maptorange.do(features[:,i], domain['feat_ranges'][0][i], domain['feat_ranges'][1][i])
+    fitness = (1/(1+features[:,3]))*2-1
     fitness = np.transpose([fitness])
     return fitness, features
 
@@ -52,20 +53,20 @@ def get(population, domain):
 def get_flowfeatures(polygon, bitmap_resolution, datadir='data', max_t=30.0, report_interval=100, mean_interval=100):
     # Diameter of the Building
     D = bitmap_resolution
-    
+
     if not os.path.exists(datadir):
         os.makedirs(datadir)
 
     # "cuda:0" for GPU "cpu" for CPU
     if GPUtil.getFirstAvailable(attempts=10, interval=1):
         device=torch.device("cuda:0")
-        print("Using GPU/CUDA")
+        # print("Using GPU/CUDA")
     else:
         device=torch.device("cpu")
-        print("Using CPU")
+        # print("Using CPU")
 
     rasterize_to_disk(polygon, bitmap_resolution)
-    
+
     stencil = lt.D2Q9
     lattice = lt.Lattice(stencil,device=device,dtype=torch.float32)
 
@@ -73,10 +74,9 @@ def get_flowfeatures(polygon, bitmap_resolution, datadir='data', max_t=30.0, rep
     building = building.astype(bool)
     building = np.rot90(building, 3)
 
-    
-    flow=lt.Obstacle2D(600,300,reynolds_number=3900,mach_number=0.075,lattice=lattice,char_length_lu=D)
+    flow = lt.Obstacle2D(600,300,reynolds_number=3900,mach_number=0.075,lattice=lattice,char_length_lu=D)
 
-    #Create a mask to determine the bounce back boundary of the cylinder
+    # Create a mask to determine the bounce back boundary of the cylinder
     x = flow.grid
     mask_np = np.zeros([flow.resolution_x,flow.resolution_y],dtype=bool)
     relative_position_x = int(mask_np.shape[0]/3-building.shape[0]/2)
@@ -84,20 +84,20 @@ def get_flowfeatures(polygon, bitmap_resolution, datadir='data', max_t=30.0, rep
 
     mask_np[relative_position_x:relative_position_x+building.shape[0],relative_position_y:relative_position_y+building.shape[1]]=building
 
-    flow.mask=mask_np
-    collision=lt.KBCCollision2D(lattice, tau=flow.units.relaxation_parameter_lu)
-    streaming=lt.StandardStreaming(lattice)
+    flow.mask = mask_np
+    collision = lt.KBCCollision2D(lattice, tau=flow.units.relaxation_parameter_lu)
+    streaming = lt.StandardStreaming(lattice)
     lattice.equilibrium = lt.QuadraticEquilibrium_LessMemory(lattice)
 
-    simulation=lt.Simulation(flow,lattice,collision,streaming)
+    simulation = lt.Simulation(flow,lattice,collision,streaming)
 
     # Create and append the NaN reporter to detect instabilities
-    NaN=NaNReporter()
+    NaN = NaNReporter()
     simulation.reporters.append(NaN)
 
     # If desired append a VTK reporter, reporting every n simulation steps
-    vtk_rep = lt.VTKReporter(lattice,flow,report_interval,datadir + '/cylinder')
-    simulation.reporters.append(vtk_rep)
+    # vtk_rep = lt.VTKReporter(lattice,flow,report_interval,datadir + '/cylinder')
+    # simulation.reporters.append(vtk_rep)
 
     from lettuce.observables import Mass, Enstrophy, MaximumVelocity
     mass_observable = Mass(lattice,flow)
@@ -115,7 +115,8 @@ def get_flowfeatures(polygon, bitmap_resolution, datadir='data', max_t=30.0, rep
     maxU_reporter = lt.ObservableReporter(maxU_observable,interval=report_interval,out=f2)
     simulation.reporters.append(maxU_reporter)
 
-    drag_reporter = lt.ObservableReporter
+    # drag_reporter = lt.ObservableReporter
+    # simulation.reporters.append(drag_reporter)
 
     # print("Simulating steps:", int(flow.units.convert_time_to_lu(max_t)))
     simulation.step(int(flow.units.convert_time_to_lu(max_t)))
@@ -128,7 +129,7 @@ def get_flowfeatures(polygon, bitmap_resolution, datadir='data', max_t=30.0, rep
 
     data_enstrophy = np.loadtxt(datadir + '/enstrophy.csv', dtype=float)
     data_umax = np.loadtxt(datadir + '/umax.csv', dtype=float)
-    
+
     if data_enstrophy.shape[0] < mean_interval:
         mean_interval = data_enstrophy.shape[0]
 
@@ -159,8 +160,8 @@ def rasterize_to_disk(polygon, bitmap_resolution):
             count=1,
             dtype=rasterio.uint8,
             nodata=1) as dst:
-                dst.write(img, 1)
-                dst.write_colormap(
-                    1, {
-                    0: (0, 0, 0),
-                    255: (255, 255, 255) })
+            dst.write(img, 1)
+            dst.write_colormap(
+                1, {
+                0: (0, 0, 0),
+                255: (255, 255, 255) })

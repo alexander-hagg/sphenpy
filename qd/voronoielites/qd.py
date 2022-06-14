@@ -3,12 +3,13 @@ import qd.voronoielites.create_archive as ca
 import qd.voronoielites.update_archive as update
 import qd.voronoielites.create_children as cc
 
+
 def evolve(init, config, domain, ff):
     # Initialization
     fitness, features = ff(init)
     archive = ca.create_archive(domain, config)
     archive = update.update_archive(archive, init, features, fitness, config, domain)
-    
+
     # Evolution
     for iGen in range(config['num_gens']):
         if iGen%100 == 0:
@@ -20,6 +21,5 @@ def evolve(init, config, domain, ff):
 
         fitness, features = ff(children)
         archive = update.update_archive(archive, children, features, fitness, config, domain)
-    
-    return archive
 
+    return archive
