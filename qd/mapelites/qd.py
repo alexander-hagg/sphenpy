@@ -23,6 +23,7 @@ def evolve(init, config, domain, ff):
 
         fitness, features = ff(children)
         replaced, replacement = compete.niche_compete(fitness, features, archive, domain, config)
+        # perc_improvement = 100.0*len(replaced)/fitness.shape[0]
         archive = update.update_archive(replaced, replacement, archive, fitness, children, features)
 
     return archive
