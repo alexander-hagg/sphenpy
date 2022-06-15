@@ -1,6 +1,12 @@
 # sphenpy
 
-This first release includes the main code for surrogate-assisted phenotypic niching (SPHEN). SPHEN uses surrogate models to enhance the efficiency of the quality diversity algorithm Voronoi-Elites (VE). VE is a generic optimization algorithm that produces a diverse archive of optimized solutions. SPHEN was introduced in [1] where we used it to generate a diverse set of building footprints and air flows around those footprints, using the Lettuce Lattice-Boltzmann solver [2]. The footprints were optimized to reduce wind speed. The diversity of solutions was created based on the amount of turbulence they produced and the area of the footprint.
+Surrogate-assisted phenotypic niching (SPHEN) uses surrogate models to enhance the efficiency of quality diversity algorithms like MAP-Elites (ME) and Voronoi-Elites (VE). QD are generic optimization algorithms that produce diverse archives of optimized solutions. SPHEN was introduced in [1] where we used it to generate a diverse set of building footprints and air flows around those footprints, using the Lettuce Lattice-Boltzmann solver [2]. The footprints were optimized to reduce wind speed. The diversity of solutions was created based on the amount of turbulence they produced and the area of the footprint.
+
+Content of this archive:
+- surrogate-assisted QD
+- with MAP-Elites or Voronoi-Elites at its core
+- GPy for surrogate-assistance with Gaussian process regression
+- Domains: Rastrigin, simple shape domain and shape optimization in 2D air flow
 
 Feel free to use and adapt this code. Contributions to this repository are welcome.
 
