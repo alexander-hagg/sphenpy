@@ -3,3 +3,4 @@ num_gens: 800
 num_children: 20
 mut_sigma: 0.1
 init_samples: 100
+algorithm: 'voronoielites'

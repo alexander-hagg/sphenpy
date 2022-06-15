@@ -1,21 +1,21 @@
 import numpy as np
-import yaml
 from scipy.stats import qmc
+import importlib
 
 import sphen.surrogates as surrogates
-from qd.voronoielites import qd, visualize
 from scipy.spatial.distance import cdist
 
 
-def evolve(samples, config, domain, ff):
+def evolve(samples, config, qdconfig, domain, ff):
+    # Load necessary core QD modules dynamically
+    qd = importlib.import_module('qd.' + qdconfig['algorithm'] + '.evolution')
+    visualize = importlib.import_module('qd.' + qdconfig['algorithm'] + '.visualize')
+
     # Get true values for sample set
     observation = samples
     fitness, features = ff.get(samples, domain)
     features = features[:,domain['features']]
     total_samples = config['total_samples']
-
-    # Setup internal QD algorithm
-    qdconfig = yaml.safe_load(open("qd/voronoielites/config.yml"))
 
     # Setup Sobol sampler
     sampler = qmc.Sobol(d=len(domain['features']), scramble=True)
@@ -33,8 +33,9 @@ def evolve(samples, config, domain, ff):
         # Evolve archive with acquisition function
         ucbfitfun = lambda x: surrogates.ucb(x, models, config['exploration_factor'])
         archive = qd.evolve(observation, qdconfig, domain, ucbfitfun)
-        figure = visualize.plot(archive, domain)
-        figure.savefig('results/ucb_fitness_' + str(observation.shape[0]), dpi=600)
+        if config['visualize_intermediate'] is True:
+            figure = visualize.plot(archive, domain)
+            figure.savefig('results/ucb_fitness_' + str(observation.shape[0]), dpi=600)
 
         # Select infill samples
         # Create emitter points using Sobol sequence and select closest points in the set (feature-based)
