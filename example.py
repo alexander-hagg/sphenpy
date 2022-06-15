@@ -9,7 +9,6 @@ from domain.simpleshapes import init, fitness_fun, express
 # from domain.lettuce2d import init, fitness_fun, express
 
 
-# Load SPHEN and domain configuration, including first population
 config = yaml.safe_load(open("sphen/config.yml"))
 qdconfig = yaml.safe_load(open("qd/mapelites/config.yml"))
 domain, samples = init.do(config.get('init_samples'))
@@ -22,7 +21,7 @@ print(f'Time elapsed: {time.time() - start:.2}s.')
 with open('archive_sphen_lettuce.pkl', 'wb') as f:
     pickle.dump(archive, f)
 
-# Visualization of archive (fitness and phenotypes)
+
 visualize = importlib.import_module('qd.' + qdconfig['algorithm'] + '.visualize')
 visualize_phenotypes = importlib.import_module('qd.' + qdconfig['algorithm'] + '.visualize_phenotypes')
 figure = visualize.plot(archive, domain)

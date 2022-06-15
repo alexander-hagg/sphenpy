@@ -1,5 +1,5 @@
 resolution: 50
-num_gens: 500
+num_gens: 1000
 num_children: 100
 mut_sigma: 0.1
 init_samples: 50

@@ -14,7 +14,7 @@ def plot(archive, domain):
     cbar.set_label(domain['labels'][-1])
     plt.xlabel(domain['labels'][domain['features'][0]])
     plt.ylabel(domain['labels'][domain['features'][1]])
-    plt.xlim(0, 1)
-    plt.ylim(0, 1)
+    # plt.xlim(0, 1)
+    # plt.ylim(0, 1)
     # plt.show()
     return plt

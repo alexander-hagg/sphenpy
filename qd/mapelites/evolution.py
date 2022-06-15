@@ -4,6 +4,8 @@ import qd.mapelites.niche_compete as compete
 import qd.mapelites.update_archive as update
 import qd.mapelites.create_children as cc
 
+import matplotlib.pyplot as plt
+
 
 def evolve(init, config, domain, ff):
     # Initialization
