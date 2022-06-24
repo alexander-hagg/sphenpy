@@ -1,0 +1,11 @@
+name: simpleshapes
+features: [0,1]
+labels: ['area', 'circumference', 'mirrorsymmetry']
+dof: 110
+plot_size: 120
+par_ranges: [10, 100]
+feat_ranges: [[0.0, 0.0],[0.5, 3]] # feat_ranges: [[0.1, 2],[0.6, 3]]
+fit_range: [0, 1]
+plotscale: True
+
+square_size: [5, 5]

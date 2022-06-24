@@ -1,0 +1,42 @@
+NSG Constraints
+
+
+100 Leute.
+2 Typen Wohneinheiten
+- Groß  (4 Personen)
+- Klein (2 Person)
+Verteilung ist noch nicht da
+Anfang: nur kleine Wohneinheiten für 2 Personen. Können später zusammengenommen werden
+-> 50 Einheiten + 5 Gemeinschaftseinheite
+
+Quader sind Grundbausteine
+Kein Winkel
+diskretisierung: 1 meter. Verschieben immer nur um 1 meter
+Kein Überlapp!
+-> x, y, höhe
+
+
+Constraints
+- Wenn sich 2 Quader nicht berühren: mindestabstand, hängt von Gebäudehöhe ab
+- 2-stöckig - oder 1/2/3
+- Nur auf versiegelter Fläche
+
+
+Feature: 
+- Konnektivität: wie viele Quader berühren sich, Berührungsfläche, max 2/3 (eine muss offen bleiben)
+ (wie kompakt geht es). Baukosten/Ästhetik
+- Temperaturindex: wie erhöht sich diese
+- Winddurchlässigkeit
+
+
+- # Gebäuden
+- m2 Wohnoberfläche
+- # Einheiten = fix?
+- Höhe = fix oder frei bis max?
+- Baugrund m2, Form
+
+
+Umsetzung - einfach
+===================
+
+
