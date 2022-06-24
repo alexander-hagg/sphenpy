@@ -14,5 +14,6 @@ def do(ninit_samples):
     # Project sampling to parameter ranges
     ranges = np.asarray(domain['par_ranges'])
     random_pop = np.multiply(random_pop, (ranges[1] - ranges[0])) + ranges[0]
+    # random_pop = np.floor(random_pop)
 
     return domain, random_pop
