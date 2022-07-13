@@ -1,7 +1,7 @@
 name: simpleshapes
 features: [0,1]
 labels: ['area', 'circumference', 'mirrorsymmetry']
-num_units: 105
+num_units: 55
 dof_perblock: 3
 plot_size: 120
 par_ranges: [[10, 10, 0], [110, 110, 3]]

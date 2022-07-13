@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
+import util.voxCPPN.tools as voxvis
 
 def do(genomes, domain):
     phenotypes = []
@@ -34,18 +34,25 @@ def express_single(genome, domain):
     return total_phenotype
 
 
-def visualize_raw(phenotype, color=[0.5, 1, 0.5], dx=0, dy=0):
-    ax = plt.figure().add_subplot(projection='3d')
-    ax.voxels(phenotype, facecolors=color, edgecolor='k')
+# def visualize_raw(phenotype, color=[0.5, 1, 0.5], dx=0, dy=0):
+#     ax = plt.figure().add_subplot(projection='3d')
+#     ax.voxels(phenotype, facecolors=color, edgecolor='k')
+# 
+#     return plt
 
-    return plt
 
+# def visualize(phenotype, domain):
+#     visualize_raw(phenotype)
+#     plt.axis('auto')
+#     ax = plt.gca()
+#     ax.set_xlim([0, domain['plot_size']])
+#     ax.set_ylim([0, domain['plot_size']])
+#     ax.set_zlim([0, 25])
+#     plt.show()
 
 def visualize(phenotype, domain):
-    visualize_raw(phenotype)
-    plt.axis('auto')
-    ax = plt.gca()
-    ax.set_xlim([0, domain['plot_size']])
-    ax.set_ylim([0, domain['plot_size']])
-    ax.set_zlim([0, 25])
-    plt.show()
+    phenotype = phenotype.astype('int')
+    phenotype = np.transpose(phenotype, axes=[1, 2, 0])
+    phenotype = np.flip(phenotype, axis=1)
+    # np.save('tmp', phenotype)
+    voxvis.render_voxels(phenotype)
