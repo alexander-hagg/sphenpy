@@ -1,7 +1,7 @@
 import yaml
 import time
 
-from domain.nsg_simple import init, fitness_fun, express
+from domain.nsg_cppn import init, fitness_fun, express
 
 domain, random_pop = init.do(1)
 

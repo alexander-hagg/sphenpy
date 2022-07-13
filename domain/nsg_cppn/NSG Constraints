@@ -39,8 +39,4 @@ Feature:
 Umsetzung - einfach
 ===================
 
-Integer grid
-Individual: position on grid (lower left) + height
-Expression:
-cube: 5x5 meter 
-If an individual cell is already occupied, move the new cube on top of the other one
+
