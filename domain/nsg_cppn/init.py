@@ -5,7 +5,7 @@ from scipy.stats import qmc
 
 
 def do(ninit_samples):
-    domain = yaml.safe_load(open("domain/nsg_simple/domain.yml"))
+    domain = yaml.safe_load(open("domain/nsg_cppn/domain.yml"))
 
     domain['dof'] = domain['num_units'] * domain['dof_perblock']
     domain['par_ranges'] = np.tile(domain['par_ranges'], math.floor(domain['num_units']))
