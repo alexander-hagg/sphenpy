@@ -3,10 +3,12 @@ features: [0,1]
 labels: ['area', 'circumference', 'mirrorsymmetry']
 num_units: 55
 dof_perblock: 3
+
 plot_size: 120
 par_ranges: [[10, 10, 0], [110, 110, 3]]
 feat_ranges: [[0.0, 0.0],[0.5, 3]] # feat_ranges: [[0.1, 2],[0.6, 3]]
 fit_range: [0, 1]
 plotscale: True
-grid_length: 20
+grid_length: 25
+max_height: 3
 square_size: [4, 4]
