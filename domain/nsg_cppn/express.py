@@ -3,8 +3,10 @@ from matplotlib import cm
 import numpy as np
 import util.voxCPPN.tools as voxvis
 import math
-
 from domain.nsg_cppn import cppn
+
+EPSILON = 1e-5
+
 
 def do_surf(genomes, domain):
     phenotypes = []
@@ -20,10 +22,15 @@ def cppn_out(net, domain):
     X, Y = np.meshgrid(X, Y)
     binary_sample_grid = np.ones([domain['grid_length'],domain['grid_length']], dtype=bool)
     raw_sample = cppn.sample(binary_sample_grid, net, domain['grid_length'])
-    ran = (np.max(raw_sample) - np.min(raw_sample))
-    sample = domain['max_height'] * (raw_sample - np.min(raw_sample)) / ran
-    phenotype = [X,Y,sample.astype(int)]
-
+    # print(raw_sample)
+    phenotype = [X,Y,raw_sample.astype(int)]
+    if domain['scale_cppn_out']:
+        ran = (np.max(raw_sample) - np.min(raw_sample))
+        if ran==0:
+            ran = EPSILON
+        sample = domain['max_height'] * (raw_sample - np.min(raw_sample)) / ran
+        phenotype = [X,Y,np.rint(sample).astype(int)]
+    
     return phenotype
 
 
@@ -41,9 +48,10 @@ def express_single(genome, domain):
     voxels = np.zeros([domain['grid_length'], domain['grid_length'], domain['grid_length']])
     for x in range(domain['grid_length']):
         for y in range(domain['grid_length']):
-            height = np.rint(Z[x,y])
-            for z in range(int(height)):
-                voxels[x, y, math.floor(z)] = 1
+            # height = np.rint(Z[x,y])
+            for z in range(Z[x,y]):
+                # voxels[x, y, math.floor(z)] = 1
+                voxels[x, y, z] = 1
 
     return voxels
 

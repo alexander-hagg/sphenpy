@@ -4,8 +4,9 @@ import numpy as np
 
 from domain.nsg_cppn import init, fitness_fun, express, cppn
 
-ninitsamples = 10
+ninitsamples = 1
 domain, random_pop = init.do(ninitsamples)
+# print(random_pop)
 
 # phenotypes = express.do_surf(random_pop, domain)
 # plt = express.visualize_surf(phenotypes[0], domain)
@@ -16,6 +17,7 @@ domain, random_pop = init.do(ninitsamples)
 phenotypes = express.do(random_pop, domain)
 for i in range(ninitsamples):
     plt = express.visualize(phenotypes[i], domain)
+    # time.sleep(1)
 
 # input = np.array([1, 1])
 # print("Get CPPN output")

@@ -12,3 +12,4 @@ plotscale: True
 grid_length: 25
 max_height: 3
 square_size: [4, 4]
+scale_cppn_out: True
