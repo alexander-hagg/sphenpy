@@ -1,14 +1,13 @@
 import numpy as np
 
 
-def random(num_neurons=2, num_layers=2, init_weight_variance=5.0):
+def random(num_neurons=2, num_layers=2, init_weight_variance=10.0):
     assert num_layers > 1
     assert num_neurons > 1
     net = {}
     net['num_inputs'] = 2
     net['num_outputs'] = 1
-    # net['act_funcs'] = {0: gaussian, 1: tanh, 2: sigmoid, 3: zero, 4: sin1, 5: sin3, 6: cos1, 7: cos3}
-    net['act_funcs'] = {0: gaussian, 1: tanh, 2: sigmoid, 3: zero, 4: sin1}
+    net['act_funcs'] = {0: gaussian, 1: tanh, 2: sigmoid, 3: zero, 4: sin}
     net['num_neurons'] = num_neurons
     net['num_layers'] = num_layers
     net['activations'] = np.random.randint(len(net['act_funcs']), size=[num_neurons, num_layers+1])
@@ -43,10 +42,8 @@ def forward(input, net):
                 # activation[hidden_neuron_id] += net['weights'][hidden_neuron_id * net['num_neurons'] + input_neuron_id, layer] * net['act_funcs'][act_func_id](activations[layer][input_neuron_id])
                 weight = net['weights'][hidden_neuron_id * net['num_neurons'] + input_neuron_id, layer]
                 act = net['act_funcs'][act_func_id](weight * activations[layer][input_neuron_id])
-                print(f'act: {act}')
                 activation[hidden_neuron_id] += act
         activations.append(activation)
-    print(activations)
     return activations[net['weights'].shape[1]][0]
 
 
@@ -60,25 +57,13 @@ def gaussian(x):
 def tanh(x):
     return np.tanh(x)
 
-
 def sigmoid(x):
     return 1/(1 + np.exp(-x))
 
 
-def sin3(x):
-    return np.sin(3*x)
+def sin(x):
+    return np.sin(x)
 
-
-def sin1(x):
-    return np.sin(1*x)
-
-
-def cos3(x):
-    return np.cos(3*x)
-
-
-def cos1(x):
-    return np.cos(1*x)
 
 def zero(x):
     return 0 * x

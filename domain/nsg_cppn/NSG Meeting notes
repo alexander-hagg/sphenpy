@@ -1,4 +1,4 @@
-NSG Constraints
+NSG Meeting notes
 
 
 100 Leute.
@@ -44,3 +44,23 @@ Individual: position on grid (lower left) + height
 Expression:
 cube: 5x5 meter 
 If an individual cell is already occupied, move the new cube on top of the other one
+
+
+Gespräch 19. Juli
+=================
+
+Ingenieursbüro für klimatologische analyse und prozessbegleitung
+-> grid an Lösungen: das ist unser Wissen
+
+
+-> Debuggingfase: agil
+    - Keine Strömungssimulation sondern nur Fläche im Wind rechnen als Optimierung
+-> Grobplanung, Volum anstreben
+    - 1x1 meter Blöcke
+-> Nach dem Algorithmus: nächste Entwurfsphase
+    - Packingproblem
+
+
+-> Output: Browser, interaktiv, filtern können
+    - threshold
+    - zoomen

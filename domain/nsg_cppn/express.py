@@ -1,8 +1,13 @@
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import numpy as np
-import util.voxCPPN.tools as voxvis
 import math
+
+import util.voxCPPN.tools as voxvis
+from voxelfuse.voxel_model import VoxelModel
+from voxelfuse.mesh import Mesh
+from voxelfuse.primitives import generateMaterials
+
 from domain.nsg_cppn import cppn
 
 EPSILON = 1e-5
@@ -70,3 +75,10 @@ def visualize(phenotype, domain):
 
     np.save('tmp', phenotype)
     voxvis.render_voxels(np.pad(phenotype, 1, mode='empty'))
+    # render_mesh(phenotype)
+
+def render_mesh(phenotype):
+    # phenotype = np.pad(phenotype, 1, mode='empty')
+    model = VoxelModel(phenotype)  #4 is aluminium.
+    mesh = Mesh.fromVoxelModel(model)
+    mesh.export('mesh.stl')
