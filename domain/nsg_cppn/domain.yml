@@ -12,5 +12,5 @@ plotscale: True
 grid_length: 93
 max_height: 3
 square_size: [4, 4]
-scale_cppn_out: False
+scale_cppn_out: True
 substrate_address: 'substrate.pbm'
