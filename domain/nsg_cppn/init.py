@@ -16,9 +16,10 @@ def do(ninit_samples):
     # img = imageio.imread(os.path.join('domain/nsg_cppn/',domain['substrate_address']))
     img = Image.open('domain/nsg_cppn/' + domain['substrate_address'])
     img = img.resize((domain['grid_length'],domain['grid_length']))
+    img = img.transpose(Image.FLIP_LEFT_RIGHT)
     img = np.array(img)
     domain['substrate'] = img.astype('bool')
-    
+
     ranges = np.asarray(domain['par_ranges'])
     random_pop = []
     for i in range(ninit_samples):

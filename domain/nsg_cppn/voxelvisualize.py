@@ -210,13 +210,13 @@ def render_voxels(voxels):
                     var light1 = new THREE.AmbientLight(0x888888, 1.0);
                     scene.add(light1);
                     var light2 = new THREE.PointLight(0xff3333, 0.75);
-                    light2.position.set(100, 200, 500);
+                    light2.position.set(1000, 2000, 5000);
                     scene.add(light2)
                     var light4 = new THREE.PointLight(0x3333ff, 0.75);
-                    light2.position.set(-100, 200, -500);
+                    light2.position.set(-1000, 2000, -5000);
                     scene.add(light4)
                     var light3 = new THREE.SpotLight(0xddddff, 1);
-                    light3.position.set(-300, -300, 300);
+                    light3.position.set(-3000, -3000, 3000);
                     scene.add(light3);
 
                     window.addEventListener('resize',windowResize, false);
@@ -229,7 +229,8 @@ def render_voxels(voxels):
 
                     const textureMaterial = new THREE.MeshBasicMaterial();
                     const loader = new THREE.TextureLoader();
-                    loader.load( '/home/alex/repositories/sphenpy/domain/nsg_cppn/data/maps.png', 
+                    // loader.load( '/home/alex/repositories/sphenpy/domain/nsg_cppn/data/maps.png', 
+                    loader.load('https://i.ibb.co/GM28tQ1/mapsat.png',
                     function ( texture ) {    
                         // The texture has loaded, so assign it to your material object. In the 
                         // next render cycle, this material update will be shown on the plane 
@@ -239,11 +240,13 @@ def render_voxels(voxels):
                         textureMaterial.needsUpdate = true;
                     });
 
-                    var geo = new THREE.PlaneGeometry(3*{{gridlength}}, 3*{{gridlength}});
+                    // var geo = new THREE.PlaneGeometry(3*{{gridlength}}, 3*{{gridlength}});
+                    var geo = new THREE.PlaneGeometry(350, 350);
                     const material2 = new THREE.MeshBasicMaterial( { color: 0x555555 } );
-                    const plane = new THREE.Mesh(geo, material2);
+                    const plane = new THREE.Mesh(geo, textureMaterial);
                     plane.rotateX(Math.PI / 2);
                     plane.rotateY(Math.PI);
+                    plane.rotateZ(Math.PI);
                     scene.add( plane );
 
                     var mesh_data = JSON.parse(JSON.stringify({{data}}));
