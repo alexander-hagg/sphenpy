@@ -9,6 +9,7 @@ from voxelfuse.mesh import Mesh
 from voxelfuse.primitives import generateMaterials
 
 from domain.nsg_cppn import cppn
+from domain.nsg_cppn import voxelvisualize
 
 EPSILON = 1e-5
 
@@ -53,10 +54,9 @@ def express_single(genome, domain):
     voxels = np.zeros([domain['grid_length'], domain['grid_length'], domain['grid_length']])
     for x in range(domain['grid_length']):
         for y in range(domain['grid_length']):
-            # height = np.rint(Z[x,y])
-            for z in range(Z[x,y]):
-                # voxels[x, y, math.floor(z)] = 1
-                voxels[x, y, z] = 1
+            if domain['substrate'][x,y]:
+                for z in range(Z[x,y]):
+                    voxels[x, y, z] = 1
 
     return voxels
 
@@ -74,7 +74,8 @@ def visualize(phenotype, domain):
     phenotype = np.flip(phenotype, axis=1)
 
     np.save('tmp', phenotype)
-    voxvis.render_voxels(np.pad(phenotype, 1, mode='empty'))
+    # voxvis.render_voxels(np.pad(phenotype, 1, mode='empty'))
+    voxelvisualize.render_voxels(np.pad(phenotype, 1, mode='empty'))
     # render_mesh(phenotype)
 
 def render_mesh(phenotype):

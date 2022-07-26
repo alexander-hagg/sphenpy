@@ -1,13 +1,13 @@
 import numpy as np
 
 
-def random(num_neurons=2, num_layers=2, init_weight_variance=10.0):
+def random(num_neurons=3, num_layers=3, init_weight_variance=5.0):
     assert num_layers > 1
     assert num_neurons > 1
     net = {}
     net['num_inputs'] = 2
     net['num_outputs'] = 1
-    net['act_funcs'] = {0: gaussian, 1: tanh, 2: sigmoid, 3: zero, 4: sin}
+    net['act_funcs'] = {0: gaussian, 1: tanh, 2: sigmoid, 3: zero, 4: sin, 5: unit, 6: step, 7: bias}
     net['num_neurons'] = num_neurons
     net['num_layers'] = num_layers
     net['activations'] = np.random.randint(len(net['act_funcs']), size=[num_neurons, num_layers+1])
@@ -67,3 +67,17 @@ def sin(x):
 
 def zero(x):
     return 0 * x
+
+
+def unit(x):
+    return x/10
+
+
+def step(x):
+    if x >= 0:
+        return 1 * x
+    else:
+        return 0 * x
+
+def bias(x):
+    return 1 * x
