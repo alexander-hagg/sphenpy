@@ -28,7 +28,7 @@ def cppn_out(net, domain):
     X, Y = np.meshgrid(X, Y)
     # binary_sample_grid = np.ones([domain['grid_length'],domain['grid_length']], dtype=bool)
     raw_sample = cppn.sample(domain['substrate'], net)
-    # print(raw_sample)
+    print(f'raw_sample: {raw_sample}')
     if domain['scale_cppn_out']:
         ranges = (np.max(raw_sample) - np.min(raw_sample))
         if ranges==0:

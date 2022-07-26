@@ -7,9 +7,9 @@ def random(num_neurons=2, num_layers=3, init_weight_variance=2.0):
     net = {}
     net['num_inputs'] = 2
     net['num_outputs'] = 1
-    net['act_funcs'] = {0: gaussian, 1: tanh, 2: sigmoid, 3: zero, 4: sin, 5: step}
-    # net['act_funcs'] = {0: gaussian, 1: tanh, 2: sigmoid, 3: zero, 4: sin, 5: unit, 6: step, 7: bias}
-    # net['act_funcs'] = {0: tanh}
+    # net['act_funcs'] = {0: gaussian, 1: tanh, 2: sigmoid, 3: zero, 4: sin, 5: step}
+    net['act_funcs'] = {0: gaussian, 1: tanh, 2: sigmoid, 3: sin}
+    
     net['num_neurons'] = num_neurons
     net['num_layers'] = num_layers
     net['activations'] = np.random.randint(len(net['act_funcs']), size=[num_neurons, num_layers+1])
@@ -46,12 +46,12 @@ def forward(input, net):
             this_layer_num_neurons = net['num_neurons']
         else:
             this_layer_num_neurons = net['num_outputs']
-        for hidden_neuron_id in range(this_layer_num_neurons):
+        for neuron_id in range(this_layer_num_neurons):
             for input_neuron_id in range(activations[layer].shape[0]):
-                act_func_id = net['activations'][hidden_neuron_id, layer]
-                weight = net['weights'][hidden_neuron_id * net['num_neurons'] + input_neuron_id, layer]
+                act_func_id = net['activations'][neuron_id, layer]
+                weight = net['weights'][neuron_id * net['num_neurons'] + input_neuron_id, layer]
                 act = net['act_funcs'][act_func_id](weight * activations[layer][input_neuron_id])
-                activation[hidden_neuron_id] += act
+                activation[neuron_id] += act
         activations.append(activation)
     return activations[net['weights'].shape[1]][0]
 
