@@ -26,38 +26,19 @@ def cppn_out(net, domain):
     X = np.arange(0, domain['grid_length'], 1)
     Y = np.arange(0, domain['grid_length'], 1)
     X, Y = np.meshgrid(X, Y)
-    # binary_sample_grid = np.ones([domain['grid_length'],domain['grid_length']], dtype=bool)
     raw_sample = cppn.sample(domain['substrate'], net)
-    print(f'raw_sample: {raw_sample}')
     if domain['scale_cppn_out']:
         ranges = (np.max(raw_sample) - np.min(raw_sample))
         if ranges==0:
             ranges = 1
         sample = domain['max_height'] * (raw_sample - np.min(raw_sample)) / ranges
-        
-        # print(sample)
-        # sample[sample<=0.5] = 0
-        # sample[np.where((sample>0.5) & (sample<=1.5))] = 1
-        # sample[np.where((sample>1.5) & (sample<=2.5))] = 2
-        # sample[np.where((sample>2.5))] = 3
-        # sample = sample.astype(int)
-        
-        # sample = np.rint(sample).astype(int)
-        # sample = domain['max_height'] * raw_sample
-        # sample[sample<=0] = 0
-        # sample[np.where((sample>0) & (sample<=1))] = 1
-        # sample[np.where((sample>1) & (sample<=2))] = 2
-        # sample[np.where((sample>2))] = 3
-        # sample = sample.astype(int)
         phenotype = [X,Y,sample.astype(int)]
     else:
         sample = domain['max_height'] * raw_sample
         sample = np.floor(sample).astype(int)
         maximum = np.max(sample)
-        # print(maximum)
         sample = sample - (maximum - domain['max_height'])
         phenotype = [X,Y,sample]
-    # print(sample)
 
     return phenotype
 

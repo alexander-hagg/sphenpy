@@ -1,24 +1,24 @@
 import numpy as np
 
 
-def random(num_neurons=2, num_layers=3, init_weight_variance=2.0):
-    assert num_layers > 1
+def random(num_neurons=4, num_layers=4, init_weight_variance=2.0):
+    assert num_layers > 0
     assert num_neurons > 0
     net = {}
     net['num_inputs'] = 2
     net['num_outputs'] = 1
     # net['act_funcs'] = {0: gaussian, 1: tanh, 2: sigmoid, 3: zero, 4: sin, 5: step}
     net['act_funcs'] = {0: gaussian, 1: tanh, 2: sigmoid, 3: sin}
+    # net['act_funcs'] = {0: sin}
     
     net['num_neurons'] = num_neurons
     net['num_layers'] = num_layers
     net['activations'] = np.random.randint(len(net['act_funcs']), size=[num_neurons, num_layers+1])
     if num_neurons > net['num_inputs']:
-        min_neurons = num_neurons
+        net['min_neurons'] = num_neurons
     else:
-        min_neurons = net['num_inputs']
-    net['weights'] = np.random.normal(size=[min_neurons*min_neurons, num_layers+1], scale=init_weight_variance)
-    print(net['weights'])
+        net['min_neurons'] = net['num_inputs']
+    net['weights'] = np.random.normal(size=[net['min_neurons']*net['min_neurons'], num_layers+1], scale=init_weight_variance)
     return net
 
 
@@ -37,23 +37,25 @@ def sample(binary_sample_grid, net):
 
 
 def forward(input, net):
-    activations = []
-    activations.append(input)
-
-    for layer in range(net['weights'].shape[1]):
-        activation = np.zeros(net['num_neurons'])
-        if layer < net['weights'].shape[1]-1:
+    activations = np.zeros((net['weights'].shape[0],net['weights'].shape[1]+1))
+    activations[0,0] = input[0]
+    activations[1,0] = input[1]
+    
+    for layer in range(1,net['weights'].shape[1]+1):
+        if layer < net['weights'].shape[1]:
             this_layer_num_neurons = net['num_neurons']
         else:
             this_layer_num_neurons = net['num_outputs']
         for neuron_id in range(this_layer_num_neurons):
-            for input_neuron_id in range(activations[layer].shape[0]):
-                act_func_id = net['activations'][neuron_id, layer]
-                weight = net['weights'][neuron_id * net['num_neurons'] + input_neuron_id, layer]
-                act = net['act_funcs'][act_func_id](weight * activations[layer][input_neuron_id])
-                activation[neuron_id] += act
-        activations.append(activation)
-    return activations[net['weights'].shape[1]][0]
+            act = 0.0
+            for input_neuron_id in range(net['min_neurons']):
+                weight = net['weights'][neuron_id * net['min_neurons'] + input_neuron_id, layer-1]
+                inp = activations[input_neuron_id,layer-1]
+                act += weight * inp
+            act_func_id = net['activations'][neuron_id, layer-1]
+            act = net['act_funcs'][act_func_id](act)
+            activations[neuron_id, layer] = act
+    return activations[0,activations.shape[1]-1]
 
 
 def gaussian(x):
