@@ -1,24 +1,59 @@
 import numpy as np
+import random as rnd
 
-
-def random(num_neurons=4, num_layers=4, init_weight_variance=2.0):
+def get_network(num_neurons=4, num_layers=2):
     assert num_layers > 0
     assert num_neurons > 0
     net = {}
     net['num_inputs'] = 2
     net['num_outputs'] = 1
     # net['act_funcs'] = {0: gaussian, 1: tanh, 2: sigmoid, 3: zero, 4: sin, 5: step}
-    net['act_funcs'] = {0: gaussian, 1: tanh, 2: sigmoid, 3: sin}
-    # net['act_funcs'] = {0: sin}
+    net['act_funcs'] = {0: gaussian, 1: tanh, 2: sigmoid, 3: sin, 4: cos}
     
     net['num_neurons'] = num_neurons
     net['num_layers'] = num_layers
-    net['activations'] = np.random.randint(len(net['act_funcs']), size=[num_neurons, num_layers+1])
     if num_neurons > net['num_inputs']:
         net['min_neurons'] = num_neurons
     else:
         net['min_neurons'] = net['num_inputs']
-    net['weights'] = np.random.normal(size=[net['min_neurons']*net['min_neurons'], num_layers+1], scale=init_weight_variance)
+    return net
+
+    
+def get_genome_sizes(net):
+    num_activation_genes = net['num_neurons'] * (net['num_layers'] + 1)
+    num_weight_genes = net['min_neurons']*net['min_neurons'] * (net['num_layers']+1)
+    return [num_activation_genes, num_weight_genes]
+
+
+def get_genome(net):
+    return np.concatenate((net['activations'].flatten(), net['weights'].flatten()))
+
+
+def mutate(net, probability = 0.1, sigma=1.0):
+    with np.nditer(net['activations'], op_flags=['readwrite']) as it:
+        for x in it:
+            if rnd.random() < probability:
+                x[...] = rnd.randint(0,len(net['act_funcs'])-1)
+    with np.nditer(net['weights'], op_flags=['readwrite']) as it:
+        for x in it:
+            if rnd.random() < probability:
+                x[...] = x[...] + rnd.gauss(0,sigma)
+    return net
+
+
+def set_genome(genome, net):
+    a = np.reshape(genome[0:net['num_neurons'] * (net['num_layers'] + 1)-1], [net['num_neurons'], net['num_layers'] + 1])
+    b = np.reshape(genome[net['num_neurons'] * (net['num_layers'] + 1):end], [net['min_neurons'] * net['min_neurons'], net['num_layers'] + 1])
+    # net['num_neurons'] * (net['num_layers'] + 1)
+    # net['min_neurons'] * net['min_neurons'] * (net['num_layers']+1)
+    # net['activations'] =     
+    # net['weights'] = 
+
+
+def random(num_neurons=2, num_layers=2, init_weight_variance=2.0):
+    net = get_network(num_neurons, num_layers)
+    net['activations'] = np.random.randint(len(net['act_funcs']), size=[net['num_neurons'], net['num_layers']+1])
+    net['weights'] = np.random.normal(size=[net['min_neurons']*net['min_neurons'], net['num_layers']+1], scale=init_weight_variance)
     return net
 
 
@@ -74,6 +109,10 @@ def sigmoid(x):
 
 def sin(x):
     return np.sin(x)
+
+
+def cos(x):
+    return np.cos(x)
 
 
 def zero(x):

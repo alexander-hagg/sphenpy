@@ -1,29 +1,20 @@
 import yaml
 import time
 import numpy as np
+import copy
 
 from domain.nsg_cppn import init, fitness_fun, express, cppn
 
 ninitsamples = 1
 domain, random_pop = init.do(ninitsamples)
-# print(random_pop)
 
-# phenotypes = express.do_surf(random_pop, domain)
-# plt = express.visualize_surf(phenotypes[0], domain)
-
-# phenotypes = express.do(random_pop, domain)
-# plt = express.visualize(phenotypes[0], domain)
-
-phenotypes = express.do(random_pop, domain)
-for i in range(ninitsamples):
-    plt = express.visualize(phenotypes[i], domain)
-    # time.sleep(1)
-
-# input = np.array([1, 1])
-# print("Get CPPN output")
-# output = cppn.forward(input, net)
-# print(output)
-
+random_network = cppn.random()
+domain['genome_size'] = cppn.get_genome_sizes(random_network)
+network = copy.deepcopy(random_network)
+cppn.mutate(network, probability=0.1, sigma=1.0)
+phenotypes = express.do([random_network, network], domain)
+plt = express.visualize(phenotypes[0], domain)
+plt = express.visualize(phenotypes[1], domain)
 
 # fitness, features = fitness_fun.get(random_pop, domain)
 

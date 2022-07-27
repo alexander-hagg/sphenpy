@@ -197,51 +197,32 @@ def render_voxels(voxels):
 
                     let controls = new OrbitControls(camera, renderer.domElement)
                     controls.target.set( 0, 0, 0);
-                    // camera.position.set( 0, 10*{{gridlength}}, 100 );
-                    // camera.position.set( 5000, 5000, 5000 );
                     controls.update();
-                    // controls.minDistance = 150;
                     controls.maxDistance = 10000;
                     controls.zoomSpeed = 2;
                     controls.enablePan = true;
                     controls.rotateSpeed = 2;
 
-                    //lights
-                    var light1 = new THREE.AmbientLight(0x888888, 1.0);
-                    scene.add(light1);
-                    var light2 = new THREE.PointLight(0xff3333, 0.75);
+                    // Lights
+                    const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+                    hemiLight.position.set( 0, 2000, 0 );
+                    scene.add( hemiLight );
+                    const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.2 );
+                    scene.add( directionalLight );
+                    var light2 = new THREE.PointLight(0xff3333, 0.5);
                     light2.position.set(1000, 2000, 5000);
                     scene.add(light2)
-                    var light4 = new THREE.PointLight(0x3333ff, 0.75);
-                    light2.position.set(-1000, 2000, -5000);
-                    scene.add(light4)
-                    var light3 = new THREE.SpotLight(0xddddff, 1);
-                    light3.position.set(-3000, -3000, 3000);
-                    scene.add(light3);
-
-                    window.addEventListener('resize',windowResize, false);
-
-                    function windowResize(){
-                        camera.aspect = window.innerWidth / window.innerHeight;
-                        camera.updateProjectionMatrix();
-                        renderer.setSize( window.innerWidth, window.innerHeight);
-                    }
 
                     const textureMaterial = new THREE.MeshBasicMaterial();
                     const loader = new THREE.TextureLoader();
-                    // loader.load( '/home/alex/repositories/sphenpy/domain/nsg_cppn/data/maps.png', 
                     loader.load('https://i.ibb.co/GM28tQ1/mapsat.png',
                     function ( texture ) {    
-                        // The texture has loaded, so assign it to your material object. In the 
-                        // next render cycle, this material update will be shown on the plane 
-                        // geometry
                         textureMaterial.map = texture;
                         textureMaterial.side = THREE.DoubleSide;
                         textureMaterial.needsUpdate = true;
                     });
 
-                    // var geo = new THREE.PlaneGeometry(3*{{gridlength}}, 3*{{gridlength}});
-                    var geo = new THREE.PlaneGeometry(350, 350);
+                    var geo = new THREE.PlaneGeometry(100, 100);
                     const material2 = new THREE.MeshBasicMaterial( { color: 0x555555 } );
                     const plane = new THREE.Mesh(geo, textureMaterial);
                     plane.rotateX(Math.PI / 2);
@@ -268,16 +249,11 @@ def render_voxels(voxels):
 
                     var material = new THREE.MeshLambertMaterial({
 
-                                color: 0x616c72,
-                            
-                                
-                    });
-                    var material1 = new THREE.MeshLambertMaterial({
-
-                                color: 0x616c72,
-                                wireframe: false,
-                                transparent: true,
-                                opacity: 0.7,                                
+                                color: 0x99cc99,
+                                // color: 0x616c72,
+                                // wireframe: false,
+                                // transparent: true,
+                                // opacity: 0.7,                                
                     });
                     
                     
@@ -290,6 +266,55 @@ def render_voxels(voxels):
                     voxmesh.translateY(-2)
                     voxmesh.translateZ(-{{gridlength}})
                     scene.add(voxmesh);
+
+                    // HOUSES
+                    const boxgeo = new THREE.BoxGeometry( 9, 4, 10 );
+                    const boxmaterial = new THREE.MeshLambertMaterial( {color: 0x888888} );
+                    const cube = new THREE.Mesh( boxgeo, boxmaterial );
+                    cube.translateZ(-45)
+                    cube.translateY(2)
+                    scene.add(cube);
+                    
+                    const cube2 = cube.clone()
+                    cube2.translateX(10)
+                    scene.add(cube2)
+                    const cube3 = cube2.clone()
+                    cube3.translateX(10)
+                    scene.add(cube3)
+                    const cube4 = cube3.clone()
+                    cube4.translateX(10)
+                    scene.add(cube4)
+
+                    const cube5 = cube.clone()
+                    cube5.translateX(-10)
+                    scene.add(cube5)
+                    const cube6 = cube5.clone()
+                    cube6.translateX(-10)
+                    scene.add(cube6)
+
+                    // TREES
+                    var leaveMaterial = new THREE.MeshLambertMaterial( { color: 0x91E56E } );
+                    var stemMaterial = new THREE.MeshLambertMaterial( { color: 0x7D5A4F } );
+                    var treebox = new THREE.BoxGeometry( 1, 1, 1 );
+                    var stem = new THREE.Mesh( treebox, stemMaterial );
+                    var treeheight = 4
+                    stem.position.set( 0, treeheight/2, 0 );
+                    stem.scale.set( 0.5, treeheight, 0.5 );
+                    var leaves = new THREE.Mesh( treebox, leaveMaterial );
+                    leaves.position.set( 0, treeheight, 0 );
+                    leaves.scale.set( treeheight, treeheight, treeheight );
+                    const tree = new THREE.Group();
+                    tree.add( leaves );
+                    tree.add( stem );
+                    tree.translateZ(45);
+                    scene.add(tree);
+                    const tree2 = tree.clone()
+                    tree2.translateX(-5);
+                    scene.add(tree2);
+                    const tree3 = tree2.clone()
+                    tree3.translateX(-5);
+                    scene.add(tree3);
+                                                            
 
                 }
 

@@ -13,7 +13,6 @@ def do(ninit_samples):
 
     domain['dof'] = domain['num_units'] * domain['dof_perblock']
     domain['par_ranges'] = np.tile(domain['par_ranges'], math.floor(domain['num_units']))
-    # img = imageio.imread(os.path.join('domain/nsg_cppn/',domain['substrate_address']))
     img = Image.open('domain/nsg_cppn/' + domain['substrate_address'])
     img = img.resize((domain['grid_length'],domain['grid_length']))
     img = img.transpose(Image.FLIP_LEFT_RIGHT)
@@ -24,7 +23,5 @@ def do(ninit_samples):
     random_pop = []
     for i in range(ninit_samples):
         random_pop.append(cppn.random())
-
-    print(f'random_pop.size: {len(random_pop)}')
 
     return domain, random_pop

@@ -76,7 +76,7 @@ def visualize(phenotype, domain):
     phenotype = np.transpose(phenotype, axes=[1, 2, 0])
     phenotype = np.flip(phenotype, axis=1)
 
-    np.save('tmp', phenotype)
+    # np.save('tmp', phenotype)
     # voxvis.render_voxels(np.pad(phenotype, 1, mode='empty'))
     voxelvisualize.render_voxels(np.pad(phenotype, 1, mode='empty'))
     # render_mesh(phenotype)
