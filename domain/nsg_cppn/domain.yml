@@ -1,6 +1,6 @@
 name: cppn3dshapes
 features: [0,1]
-labels: ['area', 'circumference', 'mirrorsymmetry']
+labels: ['surface area', 'volume_error', 'windblock area']
 num_units: 55
 dof_perblock: 3
 

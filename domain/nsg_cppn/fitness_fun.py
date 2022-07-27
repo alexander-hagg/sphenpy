@@ -12,19 +12,22 @@ def get(population, domain):
         # print(phenotypes[i])
         volume = np.sum(phenotypes[i])
         print(f'volume: {volume}')
-        volume_error = abs(domain['target_volume']-volume)
+        volume_error = (volume-domain['target_volume'])
         print(f'volume_error: {volume_error}')
+
+        surface_area = np.sum(phenotypes[i], axis=2)
+        surface_area = surface_area > 0
+        surface_area = np.sum(surface_area.astype(int))
+        print(f'surface_area: {surface_area}')
         
+
         windblock_area = np.sum(phenotypes[i], axis=0)
         windblock_area = windblock_area > 0
         windblock_area = np.sum(windblock_area.astype(int))
         print(f'windblock_area: {windblock_area}')
         fit = 1/(1+windblock_area)
         print(f'Fitness: {fit}')
-        # area = phenotypes[i].area
-        # perimeter = phenotypes[i].length
-        # symmetry = get_mirrorsymmetry(phenotypes[i])
-        features.append([volume, volume_error])
+        features.append([surface_area, volume_error, windblock_area])
         fitness.append(fit)
 
     features = np.asarray(features)

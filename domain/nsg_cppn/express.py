@@ -3,10 +3,10 @@ from matplotlib import cm
 import numpy as np
 import math
 
-import util.voxCPPN.tools as voxvis
-from voxelfuse.voxel_model import VoxelModel
-from voxelfuse.mesh import Mesh
-from voxelfuse.primitives import generateMaterials
+# import util.voxCPPN.tools as voxvis
+# from voxelfuse.voxel_model import VoxelModel
+# from voxelfuse.mesh import Mesh
+# from voxelfuse.primitives import generateMaterials
 
 from domain.nsg_cppn import cppn
 from domain.nsg_cppn import voxelvisualize
@@ -71,14 +71,20 @@ def visualize_surf(phenotype, domain):
     plt.show()
 
 
-def visualize(phenotype, domain):
+def visualize(phenotype, domain, features=None):
     phenotype = phenotype.astype('int')
     phenotype = np.transpose(phenotype, axes=[1, 2, 0])
     phenotype = np.flip(phenotype, axis=1)
 
     # np.save('tmp', phenotype)
     # voxvis.render_voxels(np.pad(phenotype, 1, mode='empty'))
-    voxelvisualize.render_voxels(np.pad(phenotype, 1, mode='empty'))
+    if features is not None:
+        feature_info = domain['labels'][0] + ': ' + str(features[0]) + '\\n' + \
+            domain['labels'][1] + ': ' + str(features[1]) + '\\n' + \
+            domain['labels'][2] + ': ' + str(features[2])
+    else:
+        feature_info = ""
+    voxelvisualize.render_voxels(np.pad(phenotype, 1, mode='empty'), feature_info)
     # render_mesh(phenotype)
 
 def render_mesh(phenotype):

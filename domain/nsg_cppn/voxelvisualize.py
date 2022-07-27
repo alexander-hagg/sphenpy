@@ -160,7 +160,7 @@ def np2vox(bin_array):
                             count += 1
     return verts, faces
 
-def render_voxels(voxels):
+def render_voxels(voxels, text=""):
     '''Render np array in the browser as a mesh using np2vox func and three.js lib'''
     verts, faces = np2vox(voxels)
     mesh_data = {'verts': verts, 'faces': faces}
@@ -344,14 +344,31 @@ def render_voxels(voxels):
                     requestAnimationFrame(render)
                 }
 
+                window.addEventListener('resize',windowResize, false);
+                    function windowResize(){
+                        camera.aspect = window.innerWidth / window.innerHeight;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize( window.innerWidth, window.innerHeight);
+                    }
+
                 init()
                 render()
+                var text2 = document.createElement('div');
+                text2.style.position = 'absolute';
+                text2.style.width = 800;
+                text2.style.height = 100;
+                text2.style.color = "white";
+                // text2.style.backgroundColor = "white";
+                text2.innerHTML = "{{text}}";
+                text2.style.top = 50 + 'px';
+                text2.style.left = 200 + 'px';
+                document.body.appendChild(text2);
             </script>
         </body>
         </html>''')
 
     gridlength = voxels.shape
-    new_html = html.render(data=json_mesh, x=voxels.shape[0], y=voxels.shape[1], z=voxels.shape[2], gridlength=gridlength)
+    new_html = html.render(data=json_mesh, x=voxels.shape[0], y=voxels.shape[1], z=voxels.shape[2], gridlength=gridlength, text=text)
     rnd_intname = np.random.randint(9999999)
     path = get_path('templates', 'template' + str(rnd_intname) + '.html')
     with open(path, 'w') as f:
