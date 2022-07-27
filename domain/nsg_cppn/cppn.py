@@ -50,7 +50,7 @@ def set_genome(genome, net):
     # net['weights'] = 
 
 
-def random(num_neurons=2, num_layers=2, init_weight_variance=2.0):
+def random(num_neurons=3, num_layers=3, init_weight_variance=2.0):
     net = get_network(num_neurons, num_layers)
     net['activations'] = np.random.randint(len(net['act_funcs']), size=[net['num_neurons'], net['num_layers']+1])
     net['weights'] = np.random.normal(size=[net['min_neurons']*net['min_neurons'], net['num_layers']+1], scale=init_weight_variance)

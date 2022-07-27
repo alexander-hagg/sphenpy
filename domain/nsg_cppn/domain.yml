@@ -14,3 +14,5 @@ max_height: 3
 square_size: [4, 4]
 scale_cppn_out: True
 substrate_address: 'substrate.pbm'
+
+target_volume: 525

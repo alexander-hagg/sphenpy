@@ -297,7 +297,7 @@ def render_voxels(voxels):
                     var stemMaterial = new THREE.MeshLambertMaterial( { color: 0x7D5A4F } );
                     var treebox = new THREE.BoxGeometry( 1, 1, 1 );
                     var stem = new THREE.Mesh( treebox, stemMaterial );
-                    var treeheight = 4
+                    var treeheight = 3.5
                     stem.position.set( 0, treeheight/2, 0 );
                     stem.scale.set( 0.5, treeheight, 0.5 );
                     var leaves = new THREE.Mesh( treebox, leaveMaterial );
@@ -306,15 +306,35 @@ def render_voxels(voxels):
                     const tree = new THREE.Group();
                     tree.add( leaves );
                     tree.add( stem );
+                    tree.translateX(10);
                     tree.translateZ(45);
-                    scene.add(tree);
                     const tree2 = tree.clone()
                     tree2.translateX(-5);
-                    scene.add(tree2);
                     const tree3 = tree2.clone()
                     tree3.translateX(-5);
-                    scene.add(tree3);
-                                                            
+                    const tree4 = tree3.clone()
+                    tree4.translateX(-5);
+                    const tree5 = tree4.clone()
+                    tree5.translateX(-5);
+                    const tree6 = tree5.clone()
+                    tree6.translateX(-5);
+                    const tree7 = tree6.clone()
+                    tree7.translateX(-5);
+                    const tree8 = tree7.clone()
+                    tree8.translateX(-5);
+                    const forest = new THREE.Group();
+                    forest.add( tree );
+                    forest.add( tree2 );
+                    forest.add( tree3 );
+                    forest.add( tree4 );
+                    forest.add( tree5 );
+                    forest.add( tree6 );
+                    forest.add( tree7 );
+                    forest.add( tree8 );
+                    var forest2 = forest.clone()
+                    forest2.translateZ(-5);
+                    scene.add(forest)
+                    scene.add(forest2)
 
                 }
 
