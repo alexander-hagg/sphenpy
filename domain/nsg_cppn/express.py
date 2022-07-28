@@ -4,9 +4,9 @@ import numpy as np
 import math
 
 # import util.voxCPPN.tools as voxvis
-# from voxelfuse.voxel_model import VoxelModel
-# from voxelfuse.mesh import Mesh
-# from voxelfuse.primitives import generateMaterials
+from voxelfuse.voxel_model import VoxelModel
+from voxelfuse.mesh import Mesh
+from voxelfuse.primitives import generateMaterials
 
 from domain.nsg_cppn import cppn
 from domain.nsg_cppn import voxelvisualize
@@ -79,16 +79,28 @@ def visualize(phenotype, domain, features=None):
     # np.save('tmp', phenotype)
     # voxvis.render_voxels(np.pad(phenotype, 1, mode='empty'))
     if features is not None:
-        feature_info = domain['labels'][0] + ': ' + str(features[0]) + '\\n' + \
-            domain['labels'][1] + ': ' + str(features[1]) + '\\n' + \
-            domain['labels'][2] + ': ' + str(features[2])
+        feature_info = domain['labels'][0] + ': ' + str(features[0]) + 'm²<br />' + \
+            domain['labels'][1] + ': ' + str(round(features[1], 2)) + \
+            'm² || preferred: ' + str(domain['target_area']) + 'm²<br />' + \
+            domain['labels'][2] + ': ' + str(features[2]) + \
+            'm² || preferred: low'
+        print(feature_info)
     else:
         feature_info = ""
     voxelvisualize.render_voxels(np.pad(phenotype, 1, mode='empty'), feature_info)
-    # render_mesh(phenotype)
+    render_mesh(phenotype)
+    render_mesh_env(phenotype)
+
 
 def render_mesh(phenotype):
-    # phenotype = np.pad(phenotype, 1, mode='empty')
-    model = VoxelModel(phenotype)  #4 is aluminium.
+    model = VoxelModel(phenotype)  #, generateMaterials(4)  4 is aluminium.
+    mesh = Mesh.fromVoxelModel(model)
+    mesh.export('mesh.stl')
+
+
+def render_mesh(phenotype):
+    fullmodel
+    phenotype
+    model = VoxelModel(fullmodel)  #, generateMaterials(4)  4 is aluminium.
     mesh = Mesh.fromVoxelModel(model)
     mesh.export('mesh.stl')

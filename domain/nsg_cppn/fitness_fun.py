@@ -10,11 +10,12 @@ def get(population, domain):
     features = []
     for i in range(len(phenotypes)):
         # print(phenotypes[i])
-        volume = np.sum(phenotypes[i])
-        print(f'volume: {volume}')
-        volume_error = (volume-domain['target_volume'])
-        print(f'volume_error: {volume_error}')
-
+        living_space_area = np.sum(phenotypes[i])
+        meter_per_cell = 93/domain['grid_length']
+        print(f'meter_per_cell: {meter_per_cell}')
+        living_space_area = living_space_area * meter_per_cell**2.0
+        print(f'living_space_area: {living_space_area}')
+        
         surface_area = np.sum(phenotypes[i], axis=2)
         surface_area = surface_area > 0
         surface_area = np.sum(surface_area.astype(int))
@@ -27,7 +28,7 @@ def get(population, domain):
         print(f'windblock_area: {windblock_area}')
         fit = 1/(1+windblock_area)
         print(f'Fitness: {fit}')
-        features.append([surface_area, volume_error, windblock_area])
+        features.append([surface_area, living_space_area, windblock_area])
         fitness.append(fit)
 
     features = np.asarray(features)
