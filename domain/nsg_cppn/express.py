@@ -8,6 +8,9 @@ from voxelfuse.voxel_model import VoxelModel
 from voxelfuse.mesh import Mesh
 from voxelfuse.primitives import generateMaterials
 
+import pyvista as pv
+from pyvista import examples
+
 from domain.nsg_cppn import cppn
 from domain.nsg_cppn import voxelvisualize
 
@@ -87,9 +90,47 @@ def visualize(phenotype, domain, features=None):
         print(feature_info)
     else:
         feature_info = ""
-    voxelvisualize.render_voxels(np.pad(phenotype, 1, mode='empty'), feature_info)
+    # voxelvisualize.render_voxels(np.pad(phenotype, 1, mode='empty'), feature_info)
     render_mesh(phenotype)
-    render_mesh_env(phenotype)
+    # render_mesh_env(phenotype)
+    # export_vtk(phenotype)
+
+
+def visualize_pyvista(phenotypes, domain, features=None):
+    nshapes = len(phenotypes)
+    nrows = int(np.ceil(np.sqrt(nshapes)))
+    plotter = pv.Plotter(shape=(nrows, nrows))
+    for i in range(nshapes):
+        row = int(np.floor(i / nrows))
+        col = i % nrows
+        if features is not None:
+            feature_info = domain['labels'][0] + ': ' + str(features[i,0]) + 'm²\n' + \
+                domain['labels'][1] + ': ' + str(round(features[i,1], 2)) + \
+                'm² || preferred: ' + str(domain['target_area']) + 'm²\n' + \
+                domain['labels'][2] + ': ' + str(features[i,2]) + \
+                'm² || preferred: low'
+        else:
+            feature_info = ""
+
+        plotter.subplot(row, col)
+        if np.sum(phenotypes[i]) == 0:
+            plotter.add_text('Invalid shape not displayed', font_size=8)
+        else:
+            plotter.add_text(feature_info, font_size=8)
+            render_mesh(phenotypes[i])
+            mesh = pv.read('mesh.stl')
+            plotter.add_mesh(mesh)
+            sz = domain['grid_length']/2
+            sz = sz
+            plane_mesh = pv.Plane(center=(sz,sz,0), direction=(0, 0, -1), i_size=2*sz, j_size=2*sz)
+            sat = pv.read_texture('domain/nsg_cppn/mapsat.png')
+            print(sat)
+            plotter.add_mesh(plane_mesh, texture=sat)
+            fitnesscolor = [1-1/(1+features[i,2]/10),1/(1+features[i,2]/10),0.0]
+            plotter.set_background(fitnesscolor, all_renderers=False)
+    plotter.link_views()
+    plotter.camera_position = [(50, 50, 10), (sz, sz, 0), (0, 0, 1)]
+    plotter.show()
 
 
 def render_mesh(phenotype):
@@ -98,9 +139,9 @@ def render_mesh(phenotype):
     mesh.export('mesh.stl')
 
 
-def render_mesh(phenotype):
-    fullmodel
-    phenotype
+def render_mesh_full(phenotype):
+    # fullmodel
+    # phenotype
     model = VoxelModel(fullmodel)  #, generateMaterials(4)  4 is aluminium.
     mesh = Mesh.fromVoxelModel(model)
     mesh.export('mesh.stl')
