@@ -25,11 +25,11 @@ def do_surf(genomes, domain):
     return phenotypes
 
 
-def cppn_out(net, domain):
+def cppn_out(genome, domain):
     X = np.arange(0, domain['grid_length'], 1)
     Y = np.arange(0, domain['grid_length'], 1)
     X, Y = np.meshgrid(X, Y)
-    raw_sample = cppn.sample(domain['substrate'], net)
+    raw_sample = cppn.sample(domain['substrate'], genome, domain)
     if domain['scale_cppn_out']:
         ranges = (np.max(raw_sample) - np.min(raw_sample))
         if ranges==0:
@@ -96,18 +96,38 @@ def visualize(phenotype, domain, features=None):
     # export_vtk(phenotype)
 
 
-def visualize_pyvista(phenotypes, domain, features=None):
+def order(phenotypes, features, shape, domain):
+    # nrows = shape[0]
+    # ncols = shape[0]
+    # sorted_ids = np.argsort(features[:, 0])
+    sorted_ids = features[:, 1].argsort()  # sort by living space area
+    tfeatures = features[sorted_ids,:]
+    sorted_ids2 = tfeatures[:, 0].argsort(kind='mergesort') # sort by footprint area
+    tfeatures2 = tfeatures[sorted_ids2,:]
+
+    phenotypes = phenotypes[sorted_ids2]
+    features = tfeatures2
+    return phenotypes, features
+
+
+def visualize_pyvista(phenotypes, domain, features=None, niches=None):
     nshapes = len(phenotypes)
     nrows = int(np.ceil(np.sqrt(nshapes)))
-    plotter = pv.Plotter(shape=(nrows, nrows))
+    shape=(nrows, nrows)
+    # phenotypes, features = assign_niches(phenotypes, features, shape, domain)
+    plotter = pv.Plotter(shape=shape)
     for i in range(nshapes):
-        row = int(np.floor(i / nrows))
-        col = i % nrows
+        if None is None:
+            row = int(np.floor(i / nrows))
+            col = i % nrows
+        else:
+            row, col = niches
         if features is not None:
-            feature_info = domain['labels'][0] + ': ' + str(features[i,0]) + 'm²\n' + \
-                domain['labels'][1] + ': ' + str(round(features[i,1], 2)) + \
+            scaled_features = features*domain['feat_ranges'][1]
+            feature_info = domain['labels'][0] + ': ' + str(scaled_features[i,0]) + 'm²\n' + \
+                domain['labels'][1] + ': ' + str(round(scaled_features[i,1], 2)) + \
                 'm² || preferred: ' + str(domain['target_area']) + 'm²\n' + \
-                domain['labels'][2] + ': ' + str(features[i,2]) + \
+                domain['labels'][2] + ': ' + str(scaled_features[i,2]) + \
                 'm² || preferred: low'
         else:
             feature_info = ""
@@ -126,7 +146,7 @@ def visualize_pyvista(phenotypes, domain, features=None):
             sat = pv.read_texture('domain/nsg_cppn/mapsat.png')
             print(sat)
             plotter.add_mesh(plane_mesh, texture=sat)
-            fitnesscolor = [1-1/(1+features[i,2]/10),1/(1+features[i,2]/10),0.0]
+            fitnesscolor = [1-1/(1+features[i,2]),1/(1+features[i,2]),0.0]
             plotter.set_background(fitnesscolor, all_renderers=False)
     plotter.link_views()
     plotter.camera_position = [(50, 50, 10), (sz, sz, 0), (0, 0, 1)]

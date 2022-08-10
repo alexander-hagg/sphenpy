@@ -10,7 +10,8 @@ import matplotlib.pyplot as plt
 def evolve(init, config, domain, ff):
     # Initialization
     archive = ca.create_archive(domain, config)
-    fitness, features = ff(init)
+    fitness, features, phenotypes = ff(init)
+    features = features[:,[domain['features'][0],domain['features'][1]]]
     replaced, replacement = compete.niche_compete(fitness, features, archive, domain, config)
     archive = update.update_archive(replaced, replacement, archive, fitness, init, features)
 
@@ -21,9 +22,10 @@ def evolve(init, config, domain, ff):
         children = np.array([])
         while children.shape[0] < config['num_children']:
             new_children = cc.create_children(archive, domain, config)
+            print(f'new_children: {new_children}')
             children = np.vstack([children, new_children]) if children.size else new_children
 
-        fitness, features = ff(children)
+        fitness, features, phenotypes = ff(children)
         replaced, replacement = compete.niche_compete(fitness, features, archive, domain, config)
         # perc_improvement = 100.0*len(replaced)/fitness.shape[0]
         archive = update.update_archive(replaced, replacement, archive, fitness, children, features)

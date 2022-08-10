@@ -14,7 +14,7 @@ def update_archive(replaced, replacement, archive, fitness, genes, features):
     # Update gene values
     a_genes = archive['genes']
     for f in range(len(replaced)):
-        a_genes[replaced[f][0],replaced[f][1],:] = genes[replacement[f],:]
+        a_genes[replaced[f][0],replaced[f][1]] = genes[replacement[f]]
     archive.update({'genes': a_genes})
 
     return archive

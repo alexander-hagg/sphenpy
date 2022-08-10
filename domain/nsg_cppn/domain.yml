@@ -4,14 +4,16 @@ labels: ['footprint area', 'living space area', 'windblock area']
 num_units: 55
 dof_perblock: 3
 
+custom_mutation: True
+
 plot_size: 120
-par_ranges: [[10, 10, 0], [110, 110, 3]]
-feat_ranges: [[0.0, 0.0],[0.5, 3]] # feat_ranges: [[0.1, 2],[0.6, 3]]
-fit_range: [0, 1]
+feat_ranges: [[0.0, 0.0, 0.0],[160, 3000, 25]] # feat_ranges: [[0.1, 2],[0.6, 3]]
 plotscale: True
 grid_length: 30
 max_height: 3
+num_neurons: 2
+num_layers: 2
+init_weight_variance: 2.0
 scale_cppn_out: True
 substrate_address: 'substrate.pbm'
-
 target_area: 2100
