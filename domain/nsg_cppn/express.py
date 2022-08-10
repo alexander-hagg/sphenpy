@@ -29,7 +29,7 @@ def cppn_out(genome, domain):
     X = np.arange(0, domain['grid_length'], 1)
     Y = np.arange(0, domain['grid_length'], 1)
     X, Y = np.meshgrid(X, Y)
-    raw_sample = cppn.sample(domain['substrate'], genome, domain)
+    raw_sample = genome.sample(domain['substrate'], domain)
     if domain['scale_cppn_out']:
         ranges = (np.max(raw_sample) - np.min(raw_sample))
         if ranges==0:
@@ -133,6 +133,7 @@ def visualize_pyvista(phenotypes, domain, features=None, niches=None):
             feature_info = ""
 
         plotter.subplot(row, col)
+        sz = domain['grid_length']/2
         if np.sum(phenotypes[i]) == 0:
             plotter.add_text('Invalid shape not displayed', font_size=8)
         else:
@@ -140,8 +141,6 @@ def visualize_pyvista(phenotypes, domain, features=None, niches=None):
             render_mesh(phenotypes[i])
             mesh = pv.read('mesh.stl')
             plotter.add_mesh(mesh)
-            sz = domain['grid_length']/2
-            sz = sz
             plane_mesh = pv.Plane(center=(sz,sz,0), direction=(0, 0, -1), i_size=2*sz, j_size=2*sz)
             sat = pv.read_texture('domain/nsg_cppn/mapsat.png')
             print(sat)

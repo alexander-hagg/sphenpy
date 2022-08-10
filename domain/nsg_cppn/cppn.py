@@ -3,14 +3,15 @@ import random as rnd
 
 
 class cppn:
-    def __init__(self, num_neurons=3, num_layers=2, sigma=0.1):
+    def __init__(self, num_neurons=2, num_layers=2, sigma=2.0):
         assert num_layers > 0
         assert num_neurons > 0
         self.num_neurons = num_neurons
         self.num_layers = num_layers
         self.num_inputs = 2
         self.num_outputs = 1
-        self.act_funcs = {0:gaussian, 1:tanh, 2:sigmoid, 3:sin, 4:cos, 5:zero}
+        # 5:zero
+        self.act_funcs = {0:gaussian, 1:tanh, 2:sigmoid, 3:sin, 4:cos}
         if self.num_neurons > self.num_inputs:
             self.min_neurons = self.num_neurons
         else:
@@ -37,11 +38,11 @@ class cppn:
         self.activations = np.reshape(genome[0:self.num_neurons * (self.num_layers + 1)], [self.num_neurons, self.num_layers + 1])
         self.weights = np.reshape(genome[self.num_neurons * (self.num_layers + 1):], [self.min_neurons * self.min_neurons, self.num_layers + 1])
 
-    def sample(binary_sample_grid, genome, domain):
+    def sample(self, binary_sample_grid, domain):
         grid_length = binary_sample_grid.shape[0]
         output_grid = np.zeros([grid_length,grid_length], dtype=float)
-        net = get_network(domain['num_neurons'],domain['num_layers'])
-        net = set_genome(genome, net)
+        # net = get_network(domain['num_neurons'],domain['num_layers'])
+        # net = set_genome(genome, net)
 
         for x in range(binary_sample_grid.shape[0]):
             for y in range(binary_sample_grid.shape[1]):
@@ -50,27 +51,27 @@ class cppn:
                     input = 2 * np.array([x,y]) / grid_length - 1
                     # input = 10 * input
                     # print(input)
-                    output_grid[x,y] = forward(input, net)
+                    output_grid[x,y] = self.forward(input)
         return output_grid
 
-    def forward(input, net):
-        activations = np.zeros((net['weights'].shape[0],net['weights'].shape[1]+1))
+    def forward(self, input):
+        activations = np.zeros((self.weights.shape[0],self.weights.shape[1]+1))
         activations[0,0] = input[0]
         activations[1,0] = input[1]
 
-        for layer in range(1,net['weights'].shape[1]+1):
-            if layer < net['weights'].shape[1]:
-                this_layer_num_neurons = net['num_neurons']
+        for layer in range(1,self.weights.shape[1]+1):
+            if layer < self.weights.shape[1]:
+                this_layer_num_neurons = self.num_neurons
             else:
-                this_layer_num_neurons = net['num_outputs']
+                this_layer_num_neurons = self.num_outputs
             for neuron_id in range(this_layer_num_neurons):
                 act = 0.0
-                for input_neuron_id in range(net['min_neurons']):
-                    weight = net['weights'][neuron_id * net['min_neurons'] + input_neuron_id, layer-1]
+                for input_neuron_id in range(self.min_neurons):
+                    weight = self.weights[neuron_id * self.min_neurons + input_neuron_id, layer-1]
                     inp = activations[input_neuron_id,layer-1]
                     act += weight * inp
-                act_func_id = net['activations'][neuron_id, layer-1]
-                act = net['act_funcs'][act_func_id](act)
+                act_func_id = self.activations[neuron_id, layer-1]
+                act = self.act_funcs[act_func_id](act)
                 activations[neuron_id, layer] = act
         return activations[0,activations.shape[1]-1]
 

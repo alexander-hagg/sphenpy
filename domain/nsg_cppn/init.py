@@ -19,9 +19,9 @@ def do(ninit_samples):
 
     random_pop = []
     for i in range(ninit_samples):
-        random_pop.append(cppn.random(domain['num_neurons'],domain['num_layers'],domain['init_weight_variance']))
+        random_pop.append(cppn.cppn())
 
-    domain['dof'] = random_pop[0].size
+    domain['dof'] = random_pop[0].get_genome().size
 
     # Do this last please
     domain['custom_mutation_fcn'] = lambda x: cust_mutation.do(x, domain)
