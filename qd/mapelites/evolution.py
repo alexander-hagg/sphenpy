@@ -22,7 +22,7 @@ def evolve(init, config, domain, ff):
         children = np.array([])
         while children.shape[0] < config['num_children']:
             new_children = cc.create_children(archive, domain, config)
-            print(f'new_children: {new_children}')
+            # print(f'new_children: {new_children}')
             children = np.vstack([children, new_children]) if children.size else new_children
 
         fitness, features, phenotypes = ff(children)

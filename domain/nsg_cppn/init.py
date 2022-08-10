@@ -26,4 +26,8 @@ def do(ninit_samples):
     # Do this last please
     domain['custom_mutation_fcn'] = lambda x: cust_mutation.do(x, domain)
 
+    # from domain.nsg_cppn.cppn import cppn
+    domain['gene_type'] = cppn.cppn
+    
+
     return domain, random_pop

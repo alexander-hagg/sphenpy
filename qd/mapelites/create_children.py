@@ -4,18 +4,21 @@ import numpy as np
 def create_children(archive, domain, config):
     # Randomly select parents and copy to children
     pool = archive['genes']
-    pool = pool.reshape((pool.shape[0]*pool.shape[1], pool.shape[2]))
+    pool = pool.reshape((pool.shape[0]*pool.shape[1], 1))
 
     # Remove empty genomes
-    pool = np.delete(pool, np.where(np.isnan(pool).any(axis=1)), axis=0)
+    if domain['custom_mutation']:
+        pool = np.delete(pool, np.where((pool==None).any(axis=1)), axis=0)
+    else:
+        pool = np.delete(pool, np.where(np.isnan(pool).any(axis=1)), axis=0)
+
     selection = np.random.randint(0, pool.shape[0], config['num_children'])
     children = np.take(pool, selection, axis=0)
 
     # Mutate children
     #try:
     if domain['custom_mutation']:
-        print("Custom mutation")
-        children = domain['custom_mutation_fcn'](children)
+        children = domain['custom_mutation_fcn']((children.tolist()))
     else:
         ranges = np.array(domain['par_ranges'])
         mutation = np.random.randn(config['num_children'],domain['dof']) * config['mut_sigma']

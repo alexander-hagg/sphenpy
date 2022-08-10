@@ -6,10 +6,14 @@ import copy
 from domain.nsg_cppn import init, fitness_fun, express, cppn
 from qd.mapelites import evolution, visualize, visualize_phenotypes
 
-ninitsamples = 64
+# from domain.nsg_cppn.cppn import cppn
+# test = np.empty((30,30), dtype=cppn)
+# print(test)
+
+ninitsamples = 16
 domain, random_pop = init.do(ninitsamples)
-fitness, features, phenotypes = fitness_fun.get(random_pop, domain)
-plt = express.visualize_pyvista(phenotypes, domain, features)
+# fitness, features, phenotypes = fitness_fun.get(random_pop, domain)
+# plt = express.visualize_pyvista(phenotypes, domain, features)
 
 start = time.time()
 fitfun = lambda x: fitness_fun.get(x, domain)

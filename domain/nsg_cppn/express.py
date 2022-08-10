@@ -87,7 +87,7 @@ def visualize(phenotype, domain, features=None):
             'm² || preferred: ' + str(domain['target_area']) + 'm²<br />' + \
             domain['labels'][2] + ': ' + str(features[2]) + \
             'm² || preferred: low'
-        print(feature_info)
+        # print(feature_info)
     else:
         feature_info = ""
     # voxelvisualize.render_voxels(np.pad(phenotype, 1, mode='empty'), feature_info)

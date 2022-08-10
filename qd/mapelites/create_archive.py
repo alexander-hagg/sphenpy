@@ -11,9 +11,12 @@ def create_archive(domain, config):
     empty_archive = np.empty((res))
     empty_archive[:] = np.nan
     fitness = empty_archive
-    genes = empty_archive
-    genes = np.expand_dims(genes, 2)
-    genes = np.tile(genes, (1, 1, domain['dof']))
+
+    # from domain.nsg_cppn.cppn import cppn
+    # test = np.empty((30,30), dtype=cppn)
+    genes = np.empty((res), dtype=domain['gene_type'])
+    # genes = np.expand_dims(genes, 2)
+    # genes = np.tile(genes, (1, 1, domain['dof']))
 
     features = empty_archive
     features = np.expand_dims(features, 2)
