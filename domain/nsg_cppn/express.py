@@ -134,19 +134,18 @@ def visualize_pyvista(phenotypes, domain, features=None, niches=None):
 
         plotter.subplot(row, col)
         sz = domain['grid_length']/2
-        if np.sum(phenotypes[i]) == 0:
-            plotter.add_text('Invalid shape not displayed', font_size=8)
-        else:
-            plotter.add_text(feature_info, font_size=8)
+        plotter.add_text(feature_info, font_size=8)
+
+        if np.sum(phenotypes[i]) > 0:            
             render_mesh(phenotypes[i])
             mesh = pv.read('mesh.stl')
             plotter.add_mesh(mesh)
-            plane_mesh = pv.Plane(center=(sz,sz,0), direction=(0, 0, -1), i_size=2*sz, j_size=2*sz)
-            sat = pv.read_texture('domain/nsg_cppn/mapsat.png')
-            print(sat)
-            plotter.add_mesh(plane_mesh, texture=sat)
-            fitnesscolor = [1-1/(1+features[i,2]),1/(1+features[i,2]),0.0]
-            plotter.set_background(fitnesscolor, all_renderers=False)
+            
+        plane_mesh = pv.Plane(center=(sz,sz,0), direction=(0, 0, -1), i_size=2*sz, j_size=2*sz)
+        sat = pv.read_texture('domain/nsg_cppn/mapsat.png')
+        plotter.add_mesh(plane_mesh, texture=sat)
+        fitnesscolor = [1-1/(1+features[i,2]),1/(1+features[i,2]),0.0]
+        plotter.set_background(fitnesscolor, all_renderers=False)
     plotter.link_views()
     plotter.camera_position = [(50, 50, 10), (sz, sz, 0), (0, 0, 1)]
     plotter.show()

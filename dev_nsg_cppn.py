@@ -8,8 +8,8 @@ from qd.mapelites import evolution, visualize, visualize_phenotypes
 
 ninitsamples = 64
 domain, random_pop = init.do(ninitsamples)
-# fitness, features, phenotypes = fitness_fun.get(random_pop, domain)
-# plt = express.visualize_pyvista(phenotypes, domain, features)
+fitness, features, phenotypes = fitness_fun.get(random_pop, domain)
+plt = express.visualize_pyvista(phenotypes, domain, features)
 
 start = time.time()
 fitfun = lambda x: fitness_fun.get(x, domain)

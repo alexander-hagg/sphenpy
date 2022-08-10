@@ -10,8 +10,7 @@ class cppn:
         self.num_layers = num_layers
         self.num_inputs = 2
         self.num_outputs = 1
-        # 5:zero
-        self.act_funcs = {0:gaussian, 1:tanh, 2:sigmoid, 3:sin, 4:cos}
+        self.act_funcs = {0:gaussian, 1:tanh, 2:sigmoid, 3:sin, 4:cos, 5:zero}
         if self.num_neurons > self.num_inputs:
             self.min_neurons = self.num_neurons
         else:
@@ -41,16 +40,12 @@ class cppn:
     def sample(self, binary_sample_grid, domain):
         grid_length = binary_sample_grid.shape[0]
         output_grid = np.zeros([grid_length,grid_length], dtype=float)
-        # net = get_network(domain['num_neurons'],domain['num_layers'])
-        # net = set_genome(genome, net)
 
         for x in range(binary_sample_grid.shape[0]):
             for y in range(binary_sample_grid.shape[1]):
                 if binary_sample_grid[x,y]:
                     # Scaled input
                     input = 2 * np.array([x,y]) / grid_length - 1
-                    # input = 10 * input
-                    # print(input)
                     output_grid[x,y] = self.forward(input)
         return output_grid
 
