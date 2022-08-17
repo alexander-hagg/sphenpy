@@ -3,5 +3,5 @@ num_gens: 10
 num_children: 20
 mut_probability: 0.1
 mut_sigma: 1.0
-init_samples: 3
+init_samples: 5
 algorithm: 'mapelites'

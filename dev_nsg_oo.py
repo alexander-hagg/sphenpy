@@ -9,24 +9,10 @@ from qd.mapelites import evolution, visualize, visualize_phenotypes
 
 config = yaml.safe_load(open("qd/mapelites/config.yml"))
 domain, random_pop = init.do(config['init_samples'])
-
-print(f'random_pop: \n{random_pop}')
-
-phenotypes = [x.express() for x in random_pop]
-
-print(f'phenotypes: {phenotypes}')
-
-[x.mutate(config['mut_probability'], config['mut_sigma']) for x in random_pop]
-phenotypes = [x.express() for x in random_pop]
-
-print(f'phenotypes: {phenotypes}')
-
-fitness, features, phenotypes = fitness_function.get(random_pop, domain)
-
-print(f'phenotypes: {phenotypes}')
-print(f'features: {features}')
-print(f'fitness: {fitness}')
-
+# phenotypes = [x.express() for x in random_pop]
+# [x.mutate(config['mut_probability'], config['mut_sigma']) for x in random_pop]
+# phenotypes = [x.express() for x in random_pop]
+# fitness, features, phenotypes = fitness_function.get(random_pop, domain)
 
 # plt = express.visualize_pyvista(phenotypes, domain, features)
 
