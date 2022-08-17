@@ -26,6 +26,11 @@ print(f'phenotypes: {phenotypes}')
 
 fitness, features, phenotypes = fitness.get(random_pop, domain)
 
+print(f'phenotypes: {phenotypes}')
+print(f'features: {features}')
+print(f'fitness: {fitness}')
+
+
 # plt = express.visualize_pyvista(phenotypes, domain, features)
 
 # start = time.time()

@@ -4,7 +4,6 @@ from util import maptorange
 
 def get(population, domain):
     features = np.copy(population)
-    print(len(population))
     x = population[:,0]
     y = population[:,1]
     fitness = 20 + x**2 - 10 * np.cos(2 * np.pi * x) + y**2 - 10 * np.cos(2* np.pi * y)
