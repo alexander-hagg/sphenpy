@@ -7,13 +7,14 @@ dof_perblock: 3
 custom_mutation: True
 
 plot_size: 120
-feat_ranges: [[0.0, 0.0, 0.0],[160, 3000, 25]] # feat_ranges: [[0.1, 2],[0.6, 3]]
+feat_ranges: [[0.0, 0.0, 0.0],[8649.0, 25947.0, 25.0]] # feat_ranges: [[0.1, 2],[0.6, 3]]
 plotscale: True
-grid_length: 30
+num_grid_cells: 30
 max_height: 3
 num_neurons: 2
 num_layers: 2
-init_weight_variance: 2.0
+init_weight_variance: 10.0
 scale_cppn_out: True
 substrate_address: 'substrate.pbm'
+substrate_length: 93
 target_area: 2100

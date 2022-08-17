@@ -10,7 +10,7 @@ class cppn:
         self.num_layers = num_layers
         self.num_inputs = 2
         self.num_outputs = 1
-        self.act_funcs = {0:gaussian, 1:tanh, 2:sigmoid, 3:sin, 4:cos, 5:zero}
+        self.act_funcs = {0:gaussian, 1:tanh, 2:sigmoid, 3:sin, 4:cos}  # , 5:zero
         if self.num_neurons > self.num_inputs:
             self.min_neurons = self.num_neurons
         else:
@@ -30,8 +30,10 @@ class cppn:
                     x[...] = rnd.randint(0,len(self.act_funcs)-1)
         with np.nditer(self.weights, op_flags=['readwrite']) as it:
             for x in it:
-                if rnd.random() < probability:
-                    x[...] = x[...] + rnd.gauss(0,sigma)
+                r = rnd.random()
+                if r < probability:
+                    added = rnd.gauss(0,sigma)
+                    x[...] = x[...] + added
 
     def set_genome(self, genome):
         self.activations = np.reshape(genome[0:self.num_neurons * (self.num_layers + 1)], [self.num_neurons, self.num_layers + 1])

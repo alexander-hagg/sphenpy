@@ -1,18 +1,18 @@
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import numpy as np
-import math
+from util import maptorange
 
 # import util.voxCPPN.tools as voxvis
 from voxelfuse.voxel_model import VoxelModel
 from voxelfuse.mesh import Mesh
-from voxelfuse.primitives import generateMaterials
+# from voxelfuse.primitives import generateMaterials
 
 import pyvista as pv
-from pyvista import examples
+# from pyvista import examples
 
-from domain.nsg_cppn import cppn
-from domain.nsg_cppn import voxelvisualize
+# from domain.nsg_cppn import cppn
+# from domain.nsg_cppn import voxelvisualize
 
 EPSILON = 1e-5
 
@@ -26,8 +26,10 @@ def do_surf(genomes, domain):
 
 
 def cppn_out(genome, domain):
-    X = np.arange(0, domain['grid_length'], 1)
-    Y = np.arange(0, domain['grid_length'], 1)
+    if genome is None:
+        return None, None, None
+    X = np.arange(0, domain['num_grid_cells'], 1)
+    Y = np.arange(0, domain['num_grid_cells'], 1)
     X, Y = np.meshgrid(X, Y)
     raw_sample = genome.sample(domain['substrate'], domain)
     if domain['scale_cppn_out']:
@@ -50,16 +52,19 @@ def do(genomes, domain):
     phenotypes = []
     for i in range(len(genomes)):
         phenotype = express_single(genomes[i], domain)
-        phenotypes.append(phenotype)
+        if phenotype is not None:
+            phenotypes.append(phenotype)
     return phenotypes
 
 
 def express_single(genome, domain):
     X, Y, Z = cppn_out(genome, domain)
     # Convert to voxels
-    voxels = np.zeros([domain['grid_length'], domain['grid_length'], domain['max_height']])
-    for x in range(domain['grid_length']):
-        for y in range(domain['grid_length']):
+    voxels = np.zeros([domain['num_grid_cells'], domain['num_grid_cells'], domain['max_height']])
+    if X is None:
+        return voxels
+    for x in range(domain['num_grid_cells']):
+        for y in range(domain['num_grid_cells']):
             if domain['substrate'][x,y]:
                 for z in range(Z[x,y]):
                     voxels[x, y, z] = 1
@@ -110,41 +115,46 @@ def order(phenotypes, features, shape, domain):
     return phenotypes, features
 
 
-def visualize_pyvista(phenotypes, domain, features=None, niches=None):
+def visualize_pyvista(phenotypes, domain, features=None, fitness=None, niches=None):
     nshapes = len(phenotypes)
     nrows = int(np.ceil(np.sqrt(nshapes)))
     shape=(nrows, nrows)
     # phenotypes, features = assign_niches(phenotypes, features, shape, domain)
-    plotter = pv.Plotter(shape=shape)
+    plotter = pv.Plotter(shape=shape, line_smoothing=True, polygon_smoothing=True)
+    if features is not None:
+        scaled_features = features
+    #     print(f'features: {features}')
+    #     for j in range(features.shape[1]):
+    #         scaled_features[:,j] = maptorange.undo(features[:,j], domain['feat_ranges'][0][j], domain['feat_ranges'][1][j])
     for i in range(nshapes):
-        if None is None:
+        if niches is None:
             row = int(np.floor(i / nrows))
             col = i % nrows
         else:
             row, col = niches
         if features is not None:
-            scaled_features = features*domain['feat_ranges'][1]
             feature_info = domain['labels'][0] + ': ' + str(scaled_features[i,0]) + 'm²\n' + \
                 domain['labels'][1] + ': ' + str(round(scaled_features[i,1], 2)) + \
-                'm² || preferred: ' + str(domain['target_area']) + 'm²\n' + \
-                domain['labels'][2] + ': ' + str(scaled_features[i,2]) + \
-                'm² || preferred: low'
+                'm² || preferred: ' + str(domain['target_area']) + 'm²\n'  # + \
+                # domain['labels'][2] + ': ' + str(scaled_features[i,2]) + \
+                # 'm² || preferred: low'
         else:
             feature_info = ""
 
         plotter.subplot(row, col)
-        sz = domain['grid_length']/2
-        plotter.add_text(feature_info, font_size=8)
+        sz = domain['num_grid_cells']/2
+        plotter.add_text(feature_info, font_size=12)
 
-        if np.sum(phenotypes[i]) > 0:            
+        if np.sum(phenotypes[i]) > 0:
             render_mesh(phenotypes[i])
             mesh = pv.read('mesh.stl')
             plotter.add_mesh(mesh)
-            
+
         plane_mesh = pv.Plane(center=(sz,sz,0), direction=(0, 0, -1), i_size=2*sz, j_size=2*sz)
         sat = pv.read_texture('domain/nsg_cppn/mapsat.png')
         plotter.add_mesh(plane_mesh, texture=sat)
-        fitnesscolor = [1-1/(1+features[i,2]),1/(1+features[i,2]),0.0]
+        # fitnesscolor = [1-1/(1+fitness[i][0]),1/(1+fitness[i][0]),0.0]
+        fitnesscolor = [1-fitness[i][0],fitness[i][0],0.0]
         plotter.set_background(fitnesscolor, all_renderers=False)
     plotter.link_views()
     plotter.camera_position = [(50, 50, 10), (sz, sz, 0), (0, 0, 1)]
@@ -152,7 +162,7 @@ def visualize_pyvista(phenotypes, domain, features=None, niches=None):
 
 
 def render_mesh(phenotype):
-    model = VoxelModel(phenotype)  #, generateMaterials(4)  4 is aluminium.
+    model = VoxelModel(phenotype)  # , generateMaterials(4)  4 is aluminium.
     mesh = Mesh.fromVoxelModel(model)
     mesh.export('mesh.stl')
 

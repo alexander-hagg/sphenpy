@@ -1,9 +1,10 @@
 import numpy as np
+import copy
 
 
 def create_children(archive, domain, config):
     # Randomly select parents and copy to children
-    pool = archive['genes']
+    pool = copy.deepcopy(archive['genes'])
     pool = pool.reshape((pool.shape[0]*pool.shape[1], 1))
 
     # Remove empty genomes
@@ -14,11 +15,14 @@ def create_children(archive, domain, config):
 
     selection = np.random.randint(0, pool.shape[0], config['num_children'])
     children = np.take(pool, selection, axis=0)
+    children = np.squeeze(children).tolist()
 
     # Mutate children
     #try:
     if domain['custom_mutation']:
-        children = domain['custom_mutation_fcn']((children.tolist()))
+        # children = domain['custom_mutation_fcn']((children))
+        for child in children:
+            child.mutate(config['mut_probability'], config['mut_sigma'])
     else:
         ranges = np.array(domain['par_ranges'])
         mutation = np.random.randn(config['num_children'],domain['dof']) * config['mut_sigma']

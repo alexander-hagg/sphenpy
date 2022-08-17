@@ -9,6 +9,7 @@ def do(children, domain):
     # print(f'children: {children}')
     for child in children:
         print(child[0])
+        child[0].mutate()
         # net['num_activation_genes'] = net['num_neurons'] * (net['num_layers'] + 1)
         # net['num_weight_genes'] = net['min_neurons']*net['min_neurons'] * (net['num_layers']+1)
 

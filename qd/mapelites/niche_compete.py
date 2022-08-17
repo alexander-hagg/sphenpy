@@ -8,10 +8,26 @@ def niche_compete(fitness, features, archive, domain, config):
     # assert (fitness <= 1).all(),"Fitness values larger than 1, assumed to be normalized between [0,1]"
 
     # Discretize features into bins
-    edges = np.linspace(0, 1, num=config['resolution'])
-    bin_assignment = np.digitize(features,edges)
+    # edges = np.linspace(0, 1, num=config['resolution'])
+    feat_ranges = domain['feat_ranges']
+    print(feat_ranges)
+    print(domain['features'])
+    feat_ranges = feat_ranges[0][domain['features']]
+    print(f'feat_ranges: {feat_ranges}')
+    edges = np.linspace(domain['feat_ranges'][0], domain['feat_ranges'][1], num=config['resolution'])
+    # print(f'edges: {edges[:,0]}')
+    # print(f'features: {features[:,0]}')
+    bin_assignment = []
+    for i in range(edges.shape[1]):
+        these_bins = np.digitize(features[:,i],edges[:,i])
+        print(f'these_bins: {these_bins}')
+        bin_assignment = np.hstack((bin_assignment, these_bins))
     bin_assignment = bin_assignment - 1
-
+    
+    print(f'features: {features}')
+    print(f'bin_assignment: {bin_assignment}')
+    quit()
+    
     ## Find highest fitness per bin
     # Sort bins by fitness, then by bin coordinates
     bin_fitness = np.hstack([bin_assignment, fitness])

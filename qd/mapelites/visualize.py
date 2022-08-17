@@ -13,5 +13,5 @@ def plot(archive, domain, ucbplot=False):
         cbar.set_label(domain['labels'][-1])
     else:
         cbar.set_label('Upper confidence bound')
-    # plt.show()
+    plt.show()
     return plt
