@@ -1,0 +1,5 @@
+name: rastrigin
+features: [0,1]
+labels: ['x', 'y']
+dof: 2
+init_weight_variance: 5.0
