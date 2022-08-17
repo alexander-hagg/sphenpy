@@ -3,9 +3,8 @@ import time
 import numpy as np
 import copy
 
-from domain.ootest import init, fitness
+from domain.ootest import init, fitness_function
 from qd.mapelites import evolution, visualize, visualize_phenotypes
-
 
 
 config = yaml.safe_load(open("qd/mapelites/config.yml"))
@@ -22,9 +21,7 @@ phenotypes = [x.express() for x in random_pop]
 
 print(f'phenotypes: {phenotypes}')
 
-
-
-fitness, features, phenotypes = fitness.get(random_pop, domain)
+fitness, features, phenotypes = fitness_function.get(random_pop, domain)
 
 print(f'phenotypes: {phenotypes}')
 print(f'features: {features}')
@@ -33,12 +30,9 @@ print(f'fitness: {fitness}')
 
 # plt = express.visualize_pyvista(phenotypes, domain, features)
 
-# start = time.time()
-# fitfun = lambda x: fitness_fun.get(x, domain)
-# config = yaml.safe_load(open("qd/mapelites/config.yml"))
-# domain, random_pop = init.do(config['init_samples'])
-
-# archive = evolution.evolve(random_pop, config, domain, fitfun)
+start = time.time()
+fitfun = lambda x: fitness_function.get(x, domain)
+archive = evolution.evolve(random_pop, config, domain, fitfun)
 # print(f'Time elapsed: {time.time() - start:.2}s.')
 # visualize.plot(archive, domain)
 
