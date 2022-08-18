@@ -10,7 +10,7 @@ class cppn:
         self.num_layers = num_layers
         self.num_inputs = 2
         self.num_outputs = 1
-        self.act_funcs = {0:gaussian, 1:tanh, 2:sigmoid, 3:sin, 4:cos}  # , 5:zero
+        self.act_funcs = {0:gaussian, 1:tanh, 2:sigmoid, 3:sin, 4:cos, 5:zero, 6:one, 7:step}  # , 5:zero
         if self.num_neurons > self.num_inputs:
             self.min_neurons = self.num_neurons
         else:
@@ -104,11 +104,7 @@ def unit(x):
 
 
 def step(x):
-    if x >= 0:
-        return np.ones(x.shape)
-    else:
-        return np.zeros(x.shape)
+    return int(x>0)
 
-
-def bias(x):
-    return np.ones(x.shape)
+def one(x):
+    return 1 + 0 * x

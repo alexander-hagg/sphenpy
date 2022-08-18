@@ -2,14 +2,15 @@ from voxelfuse.voxel_model import VoxelModel
 from voxelfuse.mesh import Mesh
 import pyvista as pv
 import numpy as np
+import matplotlib.pyplot as plt
 
 
-def plot(phenotypes, domain, features=None, fitness=None, niches=None):
+def plot(phenotypes, domain, features=None, fitness=None, niches=None, filename=None):
     nshapes = len(phenotypes)
     nrows = int(np.ceil(np.sqrt(nshapes)))
     shape=(nrows, nrows)
     # phenotypes, features = assign_niches(phenotypes, features, shape, domain)
-    plotter = pv.Plotter(shape=shape, line_smoothing=True, polygon_smoothing=True)
+    plotter = pv.Plotter(off_screen=True, window_size=[8192, 6144], shape=shape, line_smoothing=True, polygon_smoothing=True)
     if features is not None:
         scaled_features = features
     #     print(f'features: {features}')
@@ -48,8 +49,13 @@ def plot(phenotypes, domain, features=None, fitness=None, niches=None):
         fitnesscolor = [1-fitness[0][i],fitness[0][i],0.0]
         plotter.set_background(fitnesscolor, all_renderers=False)
     plotter.link_views()
-    plotter.camera_position = [(50, 50, 10), (sz, sz, 0), (0, 0, 1)]
-    plotter.show()
+    plotter.camera_position = [(50, 50, 20), (sz, sz, 0), (0, 0, 1)]
+    # if filename is not None:
+        # plotter.save_graphic(filename, title='Solutions', raster=False, painter=False)
+    plotter.show(screenshot=filename)
+    # plt.imshow(plotter.image)
+    # plt.show()
+    return plotter
 
 
 def render_mesh(phenotype):
