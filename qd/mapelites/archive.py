@@ -6,7 +6,6 @@ from templates.archive import archive
 from templates.genome import genome
 
 
-
 class mapelites_archive(archive):
     def __init__(self, domain, config):
         self.domain = domain
@@ -17,6 +16,7 @@ class mapelites_archive(archive):
             self.edges.append(np.linspace(0, 1, self.config['resolution']))
             self.res.append(self.config['resolution'])
 
+        self.total_niches = self.config['resolution']**len(self.domain['features'])
         self.fitness = np.full(self.res, np.nan)
         self.genes = np.full(self.res, genome)
         self.features = np.full(self.res, np.nan)
@@ -64,6 +64,9 @@ class mapelites_archive(archive):
         for f in range(len(replacement)):
             self.genes[replaced[f][0],replaced[f][1]] = genes[replacement[f]]
 
+        improvement = 100*len(replaced)/self.total_niches
+        return improvement
+
     def create_pool(self):
         pool = copy.deepcopy(self.genes)
         pool = pool.reshape((pool.shape[0]*pool.shape[1], 1))
@@ -105,4 +108,3 @@ class mapelites_archive(archive):
             cbar.set_label('Upper confidence bound')
         plt.show()
         return plt
-
