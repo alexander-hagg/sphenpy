@@ -10,7 +10,7 @@ def evolve(init, config, domain, ff):
     archive = mapelites_archive(domain, config)
     fitness, features, phenotypes = ff(init)
     features = features[:,[domain['features'][0],domain['features'][1]]]
-    archive.niche_compete(fitness, features, init)
+    archive.update(fitness, features, init)
 
     # Evolution
     for iGen in range(config['num_gens']):
@@ -20,8 +20,9 @@ def evolve(init, config, domain, ff):
             children = archive.create_children()
             fitness, features, phenotypes = ff(children)
             features = features[:,[domain['features'][0],domain['features'][1]]]
-            print(f'iGen: {iGen}')
-            archive.niche_compete(fitness, features, children)
+            archive.update(fitness, features, children)
+
+    return archive
 
     #     fitness, features, phenotypes = ff(children)
     #     features = features[:,[domain['features'][0],domain['features'][1]]]

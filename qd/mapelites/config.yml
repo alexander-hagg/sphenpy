@@ -1,7 +1,7 @@
-resolution: 5
-num_gens: 10
-num_children: 20
+resolution: 50
+num_gens: 10000
+num_children: 250
 mut_probability: 0.1
 mut_sigma: 1.0
-init_samples: 5
+init_samples: 50
 algorithm: 'mapelites'
