@@ -1,7 +1,7 @@
 import yaml
 import time
 # from domain.rastrigin import init, fitness_function
-from domain.nsg_cppn import init, fitness_function
+from domain.nsg_cppn import init, fitness_function, plotgrid
 from qd.mapelites import evolution
 
 config = yaml.safe_load(open("qd/mapelites/config.yml"))
@@ -15,4 +15,4 @@ print(f'Time elapsed: {time.time() - start:.2}s.')
 
 list_genomes = archive.create_pool()
 fitness, features, phenotypes = fitfun(list_genomes)
-# plt = express.visualize_pyvista(phenotypes, domain, features, fitness)
+plotgrid.plot(phenotypes, domain, features, fitness)
