@@ -1,0 +1,200 @@
+<html>
+        <head>
+            <meta charset="utf-8">
+            <title>Result</title>
+            <style>
+                body { margin: 0; }
+            </style>
+        </head>
+        <body>
+            <script type="module">
+                import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/build/three.module.js';
+                import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/controls/OrbitControls.js';
+
+                let scene, renderer, camera
+                let cube
+
+                function init() {
+
+                    scene = new THREE.Scene()
+                    renderer = new THREE.WebGLRenderer({antialias:true})
+                    renderer.setSize(window.innerWidth, window.innerHeight)
+                    document.body.appendChild(renderer.domElement)
+
+                    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 10000)
+                    camera.position.set(-2*(32, 5, 32), 2*(32, 5, 32), -(32, 5, 32));
+                    camera.up = new THREE.Vector3(0, 1, 0);
+                    camera.lookAt(new THREE.Vector3(0, 0, 0))
+                    scene.add(camera);
+
+                    let controls = new OrbitControls(camera, renderer.domElement)
+                    controls.target.set( 0, 0, 0);
+                    controls.update();
+                    controls.maxDistance = 10000;
+                    controls.zoomSpeed = 2;
+                    controls.enablePan = true;
+                    controls.rotateSpeed = 2;
+
+                    // Lights
+                    const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+                    hemiLight.position.set( 0, 2000, 0 );
+                    scene.add( hemiLight );
+                    const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.2 );
+                    scene.add( directionalLight );
+                    var light2 = new THREE.PointLight(0xff3333, 0.5);
+                    light2.position.set(1000, 2000, 5000);
+                    scene.add(light2)
+
+                    const textureMaterial = new THREE.MeshBasicMaterial();
+                    const loader = new THREE.TextureLoader();
+                    loader.load('https://i.ibb.co/GM28tQ1/mapsat.png',
+                    function ( texture ) {    
+                        textureMaterial.map = texture;
+                        textureMaterial.side = THREE.DoubleSide;
+                        textureMaterial.needsUpdate = true;
+                    });
+
+                    var geo = new THREE.PlaneGeometry(100, 100);
+                    const material2 = new THREE.MeshBasicMaterial( { color: 0x555555 } );
+                    const plane = new THREE.Mesh(geo, textureMaterial);
+                    plane.rotateX(Math.PI / 2);
+                    plane.rotateY(Math.PI);
+                    plane.rotateZ(Math.PI);
+                    scene.add( plane );
+
+                    var mesh_data = JSON.parse(JSON.stringify({"verts": [], "faces": []}));
+                    var verts = mesh_data.verts;
+                    var faces = mesh_data.faces;
+
+                    var geometry = new THREE.Geometry();
+
+                    for (let i=0; i < verts.length; i++){
+                        geometry.vertices.push(new THREE.Vector3(verts[i][1], verts[i][2], verts[i][0]));
+                    }
+                    for (let i=0; i < faces.length; i++){
+                        geometry.faces.push(new THREE.Face3(faces[i][0], faces[i][1], faces[i][2]));
+                        geometry.faces.push(new THREE.Face3(faces[i][2], faces[i][3], faces[i][0]));
+                    }
+                    geometry.computeBoundingSphere();
+                    geometry.computeFaceNormals();
+                    geometry.computeVertexNormals();
+
+                    var material = new THREE.MeshLambertMaterial({
+
+                                color: 0x99cc99,
+                                // color: 0x616c72,
+                                // wireframe: false,
+                                // transparent: true,
+                                // opacity: 0.7,                                
+                    });
+                    
+                    
+                    var voxmesh = new THREE.Mesh(geometry, material);
+                    
+                    var x = 32;
+                    var y = 5;
+                    var z = 32;
+                    voxmesh.translateX(-(32, 5, 32))
+                    voxmesh.translateY(-2)
+                    voxmesh.translateZ(-(32, 5, 32))
+                    scene.add(voxmesh);
+
+                    // HOUSES
+                    const boxgeo = new THREE.BoxGeometry( 9, 4, 10 );
+                    const boxmaterial = new THREE.MeshLambertMaterial( {color: 0x888888} );
+                    const cube = new THREE.Mesh( boxgeo, boxmaterial );
+                    cube.translateZ(-45)
+                    cube.translateY(2)
+                    scene.add(cube);
+                    
+                    const cube2 = cube.clone()
+                    cube2.translateX(10)
+                    scene.add(cube2)
+                    const cube3 = cube2.clone()
+                    cube3.translateX(10)
+                    scene.add(cube3)
+                    const cube4 = cube3.clone()
+                    cube4.translateX(10)
+                    scene.add(cube4)
+
+                    const cube5 = cube.clone()
+                    cube5.translateX(-10)
+                    scene.add(cube5)
+                    const cube6 = cube5.clone()
+                    cube6.translateX(-10)
+                    scene.add(cube6)
+
+                    // TREES
+                    var leaveMaterial = new THREE.MeshLambertMaterial( { color: 0x91E56E } );
+                    var stemMaterial = new THREE.MeshLambertMaterial( { color: 0x7D5A4F } );
+                    var treebox = new THREE.BoxGeometry( 1, 1, 1 );
+                    var stem = new THREE.Mesh( treebox, stemMaterial );
+                    var treeheight = 3.5
+                    stem.position.set( 0, treeheight/2, 0 );
+                    stem.scale.set( 0.5, treeheight, 0.5 );
+                    var leaves = new THREE.Mesh( treebox, leaveMaterial );
+                    leaves.position.set( 0, treeheight, 0 );
+                    leaves.scale.set( treeheight, treeheight, treeheight );
+                    const tree = new THREE.Group();
+                    tree.add( leaves );
+                    tree.add( stem );
+                    tree.translateX(10);
+                    tree.translateZ(45);
+                    const tree2 = tree.clone()
+                    tree2.translateX(-5);
+                    const tree3 = tree2.clone()
+                    tree3.translateX(-5);
+                    const tree4 = tree3.clone()
+                    tree4.translateX(-5);
+                    const tree5 = tree4.clone()
+                    tree5.translateX(-5);
+                    const tree6 = tree5.clone()
+                    tree6.translateX(-5);
+                    const tree7 = tree6.clone()
+                    tree7.translateX(-5);
+                    const tree8 = tree7.clone()
+                    tree8.translateX(-5);
+                    const forest = new THREE.Group();
+                    forest.add( tree );
+                    forest.add( tree2 );
+                    forest.add( tree3 );
+                    forest.add( tree4 );
+                    forest.add( tree5 );
+                    forest.add( tree6 );
+                    forest.add( tree7 );
+                    forest.add( tree8 );
+                    var forest2 = forest.clone()
+                    forest2.translateZ(-5);
+                    scene.add(forest)
+                    scene.add(forest2)
+
+                }
+
+                function render() {
+                    renderer.render(scene, camera)
+                    // controls.update(0.01)
+                    requestAnimationFrame(render)
+                }
+
+                window.addEventListener('resize',windowResize, false);
+                    function windowResize(){
+                        camera.aspect = window.innerWidth / window.innerHeight;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize( window.innerWidth, window.innerHeight);
+                    }
+
+                init()
+                render()
+                var text2 = document.createElement('div');
+                text2.style.position = 'absolute';
+                text2.style.width = 800;
+                text2.style.height = 100;
+                text2.style.color = "white";
+                // text2.style.backgroundColor = "white";
+                text2.innerHTML = "footprint area: 0.0m²<br />living space area: 0.0m² || preferred: 2100m²<br />windblock area: 0.0m² || preferred: low";
+                text2.style.top = 50 + 'px';
+                text2.style.left = 200 + 'px';
+                document.body.appendChild(text2);
+            </script>
+        </body>
+        </html>

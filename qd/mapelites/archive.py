@@ -28,8 +28,9 @@ class mapelites_archive(archive):
         edges = np.linspace(self.domain['feat_ranges'][0], self.domain['feat_ranges'][1], num=self.config['resolution']-1)
         bin_assignment = np.empty((0,fitness.shape[1]), int)
 
-        for i in range(edges.shape[1]):
-            these_bins = np.digitize(features[:,i],edges[:,i])
+        for i in range(len(self.domain['features'])):
+            j = self.domain['features'][i]
+            these_bins = np.digitize(features[:,j],edges[:,i])
             bin_assignment = np.vstack((bin_assignment, these_bins))
 
         # Find highest fitness per bin
@@ -63,8 +64,7 @@ class mapelites_archive(archive):
         for f in range(len(replacement)):
             self.genes[replaced[f][0],replaced[f][1]] = genes[replacement[f]]
 
-    def create_children(self):
-        # Randomly select parents and copy to children
+    def create_pool(self):
         pool = copy.deepcopy(self.genes)
         pool = pool.reshape((pool.shape[0]*pool.shape[1], 1))
 
@@ -74,6 +74,12 @@ class mapelites_archive(archive):
             if not isinstance(pool[i][0], genome):
                 empties[i] = True
         pool = np.delete(pool, np.where(empties), axis=0)
+        pool = pool.flatten()
+        return pool
+
+    def create_children(self):
+        # Randomly select parents and copy to children
+        pool = self.create_pool()
 
         selection = np.random.randint(0, pool.shape[0], self.config['num_children'])
         children = np.take(pool, selection, axis=0)
@@ -86,7 +92,6 @@ class mapelites_archive(archive):
         return children
 
     def plot(self, ucbplot=False):
-        print(self.fitness)
         plt.clf()
         plt.imshow(self.fitness, cmap='plasma')
         # if not ucbplot:
@@ -100,3 +105,57 @@ class mapelites_archive(archive):
             cbar.set_label('Upper confidence bound')
         plt.show()
         return plt
+
+    def plot_phenotypes(self):
+
+
+    def visualize_pyvista(phenotypes, domain, features=None, fitness=None, niches=None):
+        nshapes = len(phenotypes)
+        nrows = int(np.ceil(np.sqrt(nshapes)))
+        shape=(nrows, nrows)
+        # phenotypes, features = assign_niches(phenotypes, features, shape, domain)
+        plotter = pv.Plotter(shape=shape, line_smoothing=True, polygon_smoothing=True)
+        if features is not None:
+            scaled_features = features
+        #     print(f'features: {features}')
+        #     for j in range(features.shape[1]):
+        #         scaled_features[:,j] = maptorange.undo(features[:,j], domain['feat_ranges'][0][j], domain['feat_ranges'][1][j])
+        for i in range(nshapes):
+            if niches is None:
+                row = int(np.floor(i / nrows))
+                col = i % nrows
+            else:
+                row, col = niches
+            if features is not None:
+                feature_info = domain['labels'][0] + ': ' + str(scaled_features[i,0]) + 'm²\n' + \
+                    domain['labels'][1] + ': ' + str(round(scaled_features[i,1], 2)) + \
+                    'm² || preferred: ' + str(domain['target_area']) + 'm²\n'  # + \
+                    # domain['labels'][2] + ': ' + str(scaled_features[i,2]) + \
+                    # 'm² || preferred: low'
+            else:
+                feature_info = ""
+
+            plotter.subplot(row, col)
+            sz = domain['num_grid_cells']/2
+            plotter.add_text(feature_info, font_size=12)
+
+            if np.sum(phenotypes[i]) > 0:
+                render_mesh(phenotypes[i])
+                mesh = pv.read('mesh.stl')
+                plotter.add_mesh(mesh)
+
+            plane_mesh = pv.Plane(center=(sz,sz,0), direction=(0, 0, -1), i_size=2*sz, j_size=2*sz)
+            sat = pv.read_texture('domain/nsg_cppn/mapsat.png')
+            plotter.add_mesh(plane_mesh, texture=sat)
+            # fitnesscolor = [1-1/(1+fitness[i][0]),1/(1+fitness[i][0]),0.0]
+            fitnesscolor = [1-fitness[i][0],fitness[i][0],0.0]
+            plotter.set_background(fitnesscolor, all_renderers=False)
+        plotter.link_views()
+        plotter.camera_position = [(50, 50, 10), (sz, sz, 0), (0, 0, 1)]
+        plotter.show()
+
+
+    def render_mesh(phenotype):
+        model = VoxelModel(phenotype)  # , generateMaterials(4)  4 is aluminium.
+        mesh = Mesh.fromVoxelModel(model)
+        mesh.export('mesh.stl')

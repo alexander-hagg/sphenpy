@@ -5,7 +5,7 @@ num_units: 55
 dof_perblock: 3
 plot_size: 120
 par_ranges: [[10, 10, 0], [110, 110, 3]]
-feat_ranges: [[0.0, 0.0],[0.5, 3]] # feat_ranges: [[0.1, 2],[0.6, 3]]
+feat_ranges: [[0.0, 0.0],[0.5, 3]]
 fit_range: [0, 1]
 plotscale: True
 

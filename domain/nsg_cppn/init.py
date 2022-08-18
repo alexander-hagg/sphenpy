@@ -1,11 +1,7 @@
-import numpy as np
-import math
 import yaml
-from scipy.stats import qmc
-# import imageio
 from PIL import Image
-import os
-from domain.nsg_cppn import cppn, cust_mutation
+import numpy as np
+from domain.nsg_cppn.genome import cppn_genome
 
 
 def do(ninit_samples):
@@ -19,14 +15,6 @@ def do(ninit_samples):
 
     random_pop = []
     for i in range(ninit_samples):
-        random_pop.append(cppn.cppn(domain['num_neurons'], domain['num_layers'], domain['init_weight_variance']))
-
-    domain['dof'] = random_pop[0].get_genome().size
-
-    # Do this last please
-    domain['custom_mutation_fcn'] = lambda x: cust_mutation.do(x, domain)
-
-    # from domain.nsg_cppn.cppn import cppn
-    domain['gene_type'] = cppn.cppn
+        random_pop.append(cppn_genome(domain))
 
     return domain, random_pop

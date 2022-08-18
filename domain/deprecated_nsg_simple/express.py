@@ -34,22 +34,6 @@ def express_single(genome, domain):
     return total_phenotype
 
 
-# def visualize_raw(phenotype, color=[0.5, 1, 0.5], dx=0, dy=0):
-#     ax = plt.figure().add_subplot(projection='3d')
-#     ax.voxels(phenotype, facecolors=color, edgecolor='k')
-# 
-#     return plt
-
-
-# def visualize(phenotype, domain):
-#     visualize_raw(phenotype)
-#     plt.axis('auto')
-#     ax = plt.gca()
-#     ax.set_xlim([0, domain['plot_size']])
-#     ax.set_ylim([0, domain['plot_size']])
-#     ax.set_zlim([0, 25])
-#     plt.show()
-
 def visualize(phenotype, domain):
     phenotype = phenotype.astype('int')
     phenotype = np.transpose(phenotype, axes=[1, 2, 0])

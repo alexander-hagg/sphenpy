@@ -1,9 +1,13 @@
 name: cppn3dshapes
 features: [0,1]
 labels: ['footprint area', 'living space area', 'windblock area']
+num_units: 55
+dof_perblock: 3
+
+custom_mutation: True
+
 plot_size: 120
-# feat_ranges: [[0.0, 0.0, 0.0],[8649.0, 25947.0, 25.0]]
-feat_ranges: [[0.0, 0.0, 0.0],[2000.0, 6000.0, 25.0]]
+feat_ranges: [[0.0, 0.0, 0.0],[8649.0, 25947.0, 25.0]] # feat_ranges: [[0.1, 2],[0.6, 3]]
 plotscale: True
 num_grid_cells: 30
 max_height: 3

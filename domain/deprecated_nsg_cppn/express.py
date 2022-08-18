@@ -3,17 +3,10 @@ from matplotlib import cm
 import numpy as np
 from util import maptorange
 
-# import util.voxCPPN.tools as voxvis
 from voxelfuse.voxel_model import VoxelModel
 from voxelfuse.mesh import Mesh
-# from voxelfuse.primitives import generateMaterials
 
 import pyvista as pv
-# from pyvista import examples
-
-# from domain.nsg_cppn import cppn
-# from domain.nsg_cppn import voxelvisualize
-
 EPSILON = 1e-5
 
 

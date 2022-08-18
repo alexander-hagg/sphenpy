@@ -3,7 +3,7 @@ import random as rnd
 from templates.genome import genome
 
 
-class cppn_genome(genome):
+class math_genome(genome):
     def __init__(self, domain):
         self.domain = domain
         self.genes = np.random.normal(size=[self.domain['dof'], 1], scale=self.domain['init_weight_variance'])
