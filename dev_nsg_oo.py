@@ -1,11 +1,7 @@
 import yaml
 import time
-import numpy as np
-import copy
-
 from domain.ootest import init, fitness_function
-from qd.mapelites import evolution, visualize, visualize_phenotypes
-
+from qd.mapelites import evolution
 
 config = yaml.safe_load(open("qd/mapelites/config.yml"))
 domain, random_pop = init.do(config['init_samples'])
