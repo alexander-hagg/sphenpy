@@ -2,7 +2,5 @@ name: rastrigin
 features: [0,1]
 labels: ['x', 'y']
 dof: 2
-par_ranges: [[-6, -6],[6, 6]]
-feat_ranges: [[-6, -6],[6, 6]]
-fit_range: [0, 100]
-plotscale: True
+init_weight_variance: 1.0
+feat_ranges: [[-5.0, -5.0],[5.0, 5.0]]
