@@ -1,5 +1,5 @@
 from qd.mapelites.archive import mapelites_archive
-
+import statistics
 
 def evolve(init, config, domain, ff):
     # Initialization
@@ -11,11 +11,13 @@ def evolve(init, config, domain, ff):
 
     # Evolution
     for iGen in range(config['num_gens']):
+        children = archive.create_children()
+        fitness, features, phenotypes = ff(children)
+        features = features[:,[domain['features'][0],domain['features'][1]]]
+        improvement.append(archive.update(fitness, features, children))
         if iGen%100 == 0:
             print('Generation: ' + str(iGen) + '/' + str(config['num_gens']))
-            children = archive.create_children()
-            fitness, features, phenotypes = ff(children)
-            features = features[:,[domain['features'][0],domain['features'][1]]]
-            improvement.append(archive.update(fitness, features, children))
+            if iGen > 99:
+                print('Avg. improvement in last 100 gens: ' + str(statistics.mean(improvement[-99:])) + '%')
 
     return archive, improvement

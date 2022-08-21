@@ -1,6 +1,6 @@
 import numpy as np
 import random as rnd
-
+import math
 
 class cppn:
     def __init__(self, num_neurons=2, num_layers=2, sigma=2.0):
@@ -74,29 +74,29 @@ class cppn:
 
 
 def gaussian(x):
-    mu = 0
-    sig = 1
-    return 1./(np.sqrt(2.*np.pi)*sig)*np.exp(-np.power((x - mu)/sig, 2.)/2)
+    # 1./(np.sqrt(2.*np.pi)*sig)*np.exp(-np.power((x - mu)/sig, 2.)/2)
+    # return np.exp(-np.power(x, 2.))
+    return math.exp(-(x**2))
 
 
 def tanh(x):
-    return np.tanh(x)
+    return math.tanh(x)
 
 
 def sigmoid(x):
-    return 1/(1 + np.exp(-x))
+    return 1/(1 + math.exp(-x))
 
 
 def sin(x):
-    return np.sin(x)
+    return math.sin(x)
 
 
 def cos(x):
-    return np.cos(x)
+    return math.cos(x)
 
 
 def zero(x):
-    return 0 * x
+    return 0
 
 
 def unit(x):
@@ -107,4 +107,4 @@ def step(x):
     return int(x>0)
 
 def one(x):
-    return 1 + 0 * x
+    return 1

@@ -94,6 +94,10 @@ class mapelites_archive(archive):
 
         return children
 
+    def get_niches(self):
+        nonans = np.invert(np.isnan(self.fitness))
+        return np.column_stack(np.where(nonans))
+
     def plot(self, ucbplot=False):
         plt.clf()
         plt.imshow(self.fitness, cmap='plasma')

@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.ndimage import label
 EPSILON = 1e-5
 
 
@@ -24,8 +25,12 @@ def get(list_genomes, domain):
         windblock_area = np.sum(windblock_area)*meter_squared_per_cell
         if windblock_area == 0:
             windblock_area = 9999
-        features[i,:] = ([surface_area, living_space_area])
-        fitness[i] = 1/(1+windblock_area)
+
+        connection_directions = np.ones((3, 3), dtype=np.int)
+        labeled, num_structures = label(np.sum(phenotypes[i],axis = 2), connection_directions)
+
+        features[i,:] = ([surface_area, num_structures])
+        fitness[i] = 0.5/(1+windblock_area) + 0.5/(1+np.abs(living_space_area-domain['target_area']))
 
     fitness = np.transpose(fitness)
     return fitness, features, phenotypes
