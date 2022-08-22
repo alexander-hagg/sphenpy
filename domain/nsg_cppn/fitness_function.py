@@ -7,6 +7,7 @@ def get(list_genomes, domain):
     # Express shapes
     features = np.zeros(shape=[len(list_genomes),2])
     fitness = np.zeros(shape=[len(list_genomes),1])
+    rawfeatures = np.zeros(shape=[len(list_genomes),4])
     phenotypes = []
 
     for i in range(len(list_genomes)):
@@ -30,7 +31,8 @@ def get(list_genomes, domain):
         labeled, num_structures = label(np.sum(phenotypes[i],axis = 2), connection_directions)
 
         features[i,:] = ([surface_area, num_structures])
-        fitness[i] = 0.5/(1+windblock_area) + 0.5/(1+np.abs(living_space_area-domain['target_area']))
+        rawfeatures[i,:] = ([surface_area, num_structures, living_space_area, windblock_area])
+        fitness[i] = (0.5/(1+windblock_area) + 0.5/(1+np.abs(living_space_area-domain['target_area'])))**(1/5)
 
     fitness = np.transpose(fitness)
-    return fitness, features, phenotypes
+    return fitness, features, phenotypes, rawfeatures

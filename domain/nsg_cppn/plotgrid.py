@@ -4,7 +4,7 @@ import pyvista as pv
 import numpy as np
 
 
-def plot(phenotypes, domain, features=None, fitness=None, niches=None, filename=None, gridresolution=None, output_resolution=[8192, 6144]):
+def plot(phenotypes, domain, features=None, fitness=None, niches=None, rawfeatures=None, filename=None, gridresolution=None, output_resolution=[8192, 6144]):
     nshapes = len(phenotypes)
     if niches is not None:
         if gridresolution is not None:
@@ -24,15 +24,17 @@ def plot(phenotypes, domain, features=None, fitness=None, niches=None, filename=
             col = i % nrows
         else:
             row, col = niches[i]
-        if features is not None:
-            feature_info = domain['labels'][0] + ': ' + str(round(features[i,0])) + 'm²\n' + \
-                domain['labels'][1] + ': ' + str(round(features[i,1], 2))
+        if rawfeatures is not None:
+            feature_info = domain['labels'][0] + ': ' + str(round(rawfeatures[i,0])) + 'm²\n' + \
+                domain['labels'][1] + ': ' + str(round(rawfeatures[i,1])) + '\n' + \
+                domain['labels'][2] + ': ' + str(round(rawfeatures[i,2])) + 'm²\n' + \
+                domain['labels'][3] + ': ' + str(round(rawfeatures[i,3])) + 'm²\n'
         else:
             feature_info = ""
 
         plotter.subplot(row, col)
         sz = domain['num_grid_cells']/2
-        plotter.add_text(feature_info, font_size=12)
+        plotter.add_text(feature_info, font_size=8)
 
         if np.sum(phenotypes[i]) > 0:
             render_mesh(phenotypes[i])

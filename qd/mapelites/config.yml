@@ -1,6 +1,6 @@
 algorithm: 'mapelites'
-resolution: 10
-num_gens: 2000
+resolution: 16
+num_gens: 10000
 num_children: 20
 mut_probability: 0.1
 mut_sigma: 1.0

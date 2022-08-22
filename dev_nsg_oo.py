@@ -26,6 +26,6 @@ print(f'Time elapsed: {time.time() - start:.2}s.')
 # archive.plot()
 
 list_genomes = archive.create_pool()
-fitness, features, phenotypes = fitfun(list_genomes)
+fitness, features, phenotypes, rawfeatures = fitfun(list_genomes)
 niches = archive.get_niches()
-plot = plotgrid.plot(phenotypes, domain, features=features, fitness=fitness, niches=niches, filename='archive.png', gridresolution=config['resolution'], output_resolution=[4000, 4000])
+plot = plotgrid.plot(phenotypes, domain, features=features, fitness=fitness, niches=niches, rawfeatures=rawfeatures, filename='archive.png', gridresolution=config['resolution'], output_resolution=[4000, 4000])
