@@ -33,6 +33,8 @@ def get(list_genomes, domain):
         features[i,:] = ([surface_area, num_structures])
         rawfeatures[i,:] = ([surface_area, num_structures, living_space_area, windblock_area])
         fitness[i] = (0.5/(1+windblock_area) + 0.5/(1+np.abs(living_space_area-domain['target_area'])))**(1/5)
+        # fitness[i] = 1/(1+np.abs(living_space_area-domain['target_area']))**(1/5)
+
 
     fitness = np.transpose(fitness)
     return fitness, features, phenotypes, rawfeatures

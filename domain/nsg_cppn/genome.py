@@ -28,10 +28,8 @@ class cppn_genome(genome):
                     x[...] = rnd.randint(0,len(self.genes.act_funcs)-1)
         with np.nditer(self.genes.weights, op_flags=['readwrite']) as it:
             for x in it:
-                r = rnd.random()
-                if r < probability:
-                    added = rnd.gauss(0,sigma)
-                    x[...] = x[...] + added
+                if rnd.random() < probability:
+                    x[...] = x[...] + rnd.gauss(0,sigma)
 
     def express(self):
         if self.genes is None:
