@@ -1,15 +1,14 @@
-import yaml
 import time
 import matplotlib.pyplot as plt
 
-from qd.mapelites import evolution
+# from qd.mapelites import evolution, get_config
+from qd.voronoielites import evolution, cfg
 
 # from domain.rastrigin import init, fitness_function
 from domain.nsg_cppn import init, fitness_function, plotgrid
 
-import cProfile, pstats
 
-config = yaml.safe_load(open("qd/mapelites/config.yml"))
+config = cfg.get()
 domain, random_pop = init.do(config['init_samples'])
 
 start = time.time()
@@ -23,9 +22,9 @@ archive,improvement = evolution.evolve(random_pop, config, domain, fitfun)
 # stats.print_stats()
 
 print(f'Time elapsed: {time.time() - start:.2}s.')
-# archive.plot()
+archive.plot()
 
-list_genomes = archive.create_pool()
-fitness, features, phenotypes, rawfeatures = fitfun(list_genomes)
-niches = archive.get_niches()
-plot = plotgrid.plot(phenotypes, domain, features=features, fitness=fitness, niches=niches, rawfeatures=rawfeatures, filename='archive.png', gridresolution=config['resolution'], output_resolution=[4000, 4000])
+# list_genomes = archive.create_pool()
+# fitness, features, phenotypes, rawfeatures = fitfun(list_genomes)
+# niches = archive.get_niches()
+# plot = plotgrid.plot(phenotypes, domain, features=features, fitness=fitness, niches=niches, rawfeatures=rawfeatures, filename='archive.png', gridresolution=config['resolution'], output_resolution=[4000, 4000])

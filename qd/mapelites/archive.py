@@ -101,8 +101,6 @@ class mapelites_archive(archive):
     def plot(self, ucbplot=False):
         plt.clf()
         plt.imshow(self.fitness, cmap='plasma')
-        # if not ucbplot:
-            # plt.clim(0, 1)
         plt.xlabel(self.domain['labels'][self.domain['features'][0]])
         plt.ylabel(self.domain['labels'][self.domain['features'][1]])
         cbar = plt.colorbar()

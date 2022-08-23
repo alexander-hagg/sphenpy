@@ -1,25 +1,24 @@
-import numpy as np
-import qd.voronoielites.create_archive as ca
-import qd.voronoielites.update_archive as update
-import qd.voronoielites.create_children as cc
+from qd.voronoielites.archive import voronoi_archive
+import statistics
 
 
 def evolve(init, config, domain, ff):
     # Initialization
-    fitness, features = ff(init)
-    archive = ca.create_archive(domain, config)
-    archive = update.update_archive(archive, init, features, fitness, config, domain)
+    archive = voronoi_archive(domain, config)
+    fitness, features, phenotypes = ff(init)[0:3]
+    features = features[:,[domain['features'][0],domain['features'][1]]]
+    improvement = []
+    improvement.append(archive.update(fitness, features, init))
 
     # Evolution
     for iGen in range(config['num_gens']):
+        children = archive.create_children()
+        fitness, features, phenotypes = ff(children)[0:3]
+        features = features[:,[domain['features'][0],domain['features'][1]]]
+        improvement.append(archive.update(fitness, features, children))
         if iGen%100 == 0:
             print('Generation: ' + str(iGen) + '/' + str(config['num_gens']))
-        children = np.array([])
-        while children.shape[0] < config['num_children']:
-            new_children = cc.create_children(archive, domain, config)
-            children = np.vstack([children, new_children]) if children.size else new_children
+            if iGen > 99:
+                print('Avg. improvement in last 100 gens: ' + str(statistics.mean(improvement[-99:])) + '%')
 
-        fitness, features = ff(children)
-        archive = update.update_archive(archive, children, features, fitness, config, domain)
-
-    return archive
+    return archive, improvement
