@@ -1,7 +1,14 @@
 import numpy as np
 import copy
-import matplotlib.pyplot as plt
 from scipy.spatial.distance import cdist
+
+import matplotlib.pyplot as plt
+
+# For interpolation plotting
+from scipy.interpolate import griddata
+
+# For Voronoi plotting
+from scipy.spatial import Voronoi, voronoi_plot_2d
 
 from templates.archive import archive
 from templates.genome import genome
@@ -68,8 +75,28 @@ class voronoi_archive(archive):
         return np.column_stack(np.where(nonans))
 
     def plot(self, ucbplot=False):
-        plt.clf()
-        plt.imshow(self.fitness, cmap='plasma')
+        voronoi = Voronoi(self.features)
+        voronoi_plot_2d(voronoi, show_vertices=False, show_points=False)
+        # for region in voronoi.regions:
+            # if -1 not in region:
+                # polygon = [voronoi.vertices[p] for p in region]
+                # plt.fill(*zip(*polygon))
+        plt.scatter(self.features[:,0], self.features[:,1], c=self.fitness, zorder=100)
+        # fig = voronoi_plot_2d(vor, show_vertices=False)
+        # plt.xlabel(self.domain['labels'][self.domain['features'][0]])
+        # plt.ylabel(self.domain['labels'][self.domain['features'][1]])
+        # cbar = plt.colorbar()
+        # if not ucbplot:
+        #     cbar.set_label(self.domain['labels'][-1])
+        # else:
+        #     cbar.set_label('Upper confidence bound')
+        plt.show()
+        return plt
+
+    def plot_interp(self, ucbplot=False):
+        X, Y = np.mgrid[0:1:100j, 0:1:100j]        
+        grid_z2 = griddata(self.features, self.fitness, (X, Y), method='cubic')
+        plt.imshow(grid_z2.T[0], extent=(0, 1, 0, 1), origin='lower')
         plt.xlabel(self.domain['labels'][self.domain['features'][0]])
         plt.ylabel(self.domain['labels'][self.domain['features'][1]])
         cbar = plt.colorbar()

@@ -2,8 +2,8 @@ name: nsgcppn
 features: [0,1]
 labels: ['footprint area', 'number of structures', 'living space area', 'windblock area']
 plot_size: 120
-# feat_ranges: [[0.0, 0.0, 0.0],[8649.0, 25947.0, 25.0]]
-feat_ranges: [[400.0, 0, 1800.0, 0.0],[2100.0, 16, 2400.0, 90.0]]
+feat_ranges: [[0.0, 0, 0.0, 0.0],[8649.0, 16, 25947.0, 25.0]]
+# feat_ranges: [[400.0, 0, 1800.0, 0.0],[2100.0, 16, 2400.0, 90.0]]
 plotscale: True
 num_grid_cells: 30
 max_height: 2

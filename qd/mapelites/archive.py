@@ -13,7 +13,7 @@ class mapelites_archive(archive):
         self.edges = []
         self.res = []
         for i in range(len(self.domain['features'])):
-            self.edges.append(np.linspace(0, 1, self.config['resolution']))
+            self.edges.append(np.linspace(0, 1, self.config['resolution']-1))
             self.res.append(self.config['resolution'])
 
         self.total_niches = self.config['resolution']**len(self.domain['features'])
@@ -25,12 +25,11 @@ class mapelites_archive(archive):
 
     def update(self, fitness, features, genes):
         # Discretize features into bins
-        edges = np.linspace(self.domain['feat_ranges'][0], self.domain['feat_ranges'][1], num=self.config['resolution']-1)
+        # edges = np.linspace(self.domain['feat_ranges'][self.domain['features'][0]], self.domain['feat_ranges'][self.domain['features'][1]], num=self.config['resolution']-1)
         bin_assignment = np.empty((0,fitness.shape[1]), int)
 
         for i in range(len(self.domain['features'])):
-            j = self.domain['features'][i]
-            these_bins = np.digitize(features[:,j],edges[:,i])
+            these_bins = np.digitize(features[:,i],self.edges[i])
             bin_assignment = np.vstack((bin_assignment, these_bins))
 
         # Find highest fitness per bin
@@ -46,7 +45,7 @@ class mapelites_archive(archive):
         unq, ind = np.unique(bin_fitness[0:2,:], return_inverse=False, return_index=True, axis=1)
         best_index = idx[ind]
         best_bin = bin_assignment[:, best_index]
-
+            
         # Get replacement IDs in both archive and candidate arrays
         replaced = []
         replacement = []
