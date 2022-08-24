@@ -1,8 +1,9 @@
 import time
 import matplotlib.pyplot as plt
+import cProfile, pstats
 
-# from qd.mapelites import evolution, cfg
-from qd.voronoielites import evolution, cfg
+from qd.mapelites import evolution, cfg
+# from qd.voronoielites import evolution, cfg
 
 # from domain.rastrigin import init, fitness_function
 from domain.nsg_cppn import init, fitness_function, plotgrid
