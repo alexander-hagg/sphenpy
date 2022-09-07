@@ -1,9 +1,7 @@
 import time
 import matplotlib.pyplot as plt
-import cProfile, pstats
 
 from qd.mapelites import evolution, cfg
-# from qd.voronoielites import evolution, cfg
 
 from domain.rastrigin import init, fitness_function
 # from domain.nsg_cppn import init, fitness_function, plotgrid
@@ -14,14 +12,7 @@ domain, random_pop = init.do(config['init_samples'])
 
 start = time.time()
 fitfun = lambda x: fitness_function.get(x, domain)
-
-# profiler = cProfile.Profile()
-# profiler.enable()
 archive,improvement = evolution.evolve(random_pop, config, domain, fitfun)
-# profiler.disable()
-# stats = pstats.Stats(profiler).sort_stats('tottime')
-# stats.print_stats()
-
 print(f'Time elapsed: {time.time() - start:.2}s.')
 archive.plot()
 
