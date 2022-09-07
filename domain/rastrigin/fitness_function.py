@@ -15,4 +15,4 @@ def get(population, domain):
     features = np.asarray(features)
     fitness = np.transpose(fitness)
 
-    return fitness, features, phenotypes
+    return fitness, features, phenotypes, features

@@ -30,6 +30,7 @@ class voronoi_archive(archive):
         all_fitness = np.vstack((self.fitness,np.transpose(np.asarray(fitness))))
         while all_features.shape[0] > self.config['resolution']:
             distances = cdist(all_features, all_features)
+            # print(all_features)
             ind = np.unravel_index(np.argmin(distances[np.where(~np.eye(distances.shape[0],dtype=bool))], axis=None), distances.shape)
             lower = all_fitness[ind[0]] > all_fitness[ind[1]]
             all_genomes = np.delete(all_genomes, ind[int(lower)], 0)
@@ -81,7 +82,8 @@ class voronoi_archive(archive):
             # if -1 not in region:
                 # polygon = [voronoi.vertices[p] for p in region]
                 # plt.fill(*zip(*polygon))
-        plt.scatter(self.features[:,0], self.features[:,1], c=self.fitness, zorder=100)
+        # print(self.features)
+        plt.scatter(self.features[:,0], self.features[:,1], s=16, c=self.fitness, zorder=100)
         # fig = voronoi_plot_2d(vor, show_vertices=False)
         # plt.xlabel(self.domain['labels'][self.domain['features'][0]])
         # plt.ylabel(self.domain['labels'][self.domain['features'][1]])
