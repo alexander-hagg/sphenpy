@@ -8,10 +8,10 @@ from scipy.spatial.distance import cdist
 
 def evolve(samples, config, qdconfig, domain, ff):
     qd = importlib.import_module('qd.' + qdconfig['algorithm'] + '.evolution')
-    visualize = importlib.import_module('qd.' + qdconfig['algorithm'] + '.visualize')
+    # visualize = importlib.import_module('qd.' + qdconfig['algorithm'] + '.visualize')
 
     observation = samples
-    fitness, features = ff.get(observation, domain)
+    fitness, features = ff(observation)[0:2]
     features = features[:,domain['features']]
     total_samples = config['total_samples']
 
@@ -19,13 +19,13 @@ def evolve(samples, config, qdconfig, domain, ff):
     sampler = qmc.Sobol(d=len(domain['features']), scramble=True)
 
     # This is the main sampling loop
-    while observation.shape[0] <= total_samples:
-        print(f'Current samples: {observation.shape[0]}/{total_samples}')
+    while len(observation) <= total_samples:
+        print(f'Current samples: {len(observation)}/{total_samples}')
 
         # Train surrogate models
-        models = surrogates.train(observation, [fitness, features[:,0][np.newaxis].T, features[:,1][np.newaxis].T])
+        models = surrogates.train(observation, [fitness, features[:,0][np.newaxis], features[:,1][np.newaxis]])
 
-        if observation.shape[0] >= total_samples:
+        if len(observation) >= total_samples:
             break
 
         # Evolve archive with acquisition function
@@ -36,8 +36,9 @@ def evolve(samples, config, qdconfig, domain, ff):
             figure.savefig('results/ucb_fitness_' + str(observation.shape[0]), dpi=600)
 
         # Flatten genes and features (due to MAP-Elites-like structure of some archives)
-        flat_genes = archive['genes'].reshape((-1, domain['dof']))
-        flat_genes = flat_genes[~np.isnan(flat_genes).any(axis=1)]
+        flat_genes = archive.genes
+        # flat_genes = archive['genes'].reshape((-1, domain['dof']))
+        # flat_genes = flat_genes[~np.isnan(flat_genes).any(axis=1)]
         flat_features = archive['features'].reshape((-1, len(domain['features'])))
         flat_features = flat_features[~np.isnan(flat_features).any(axis=1)]
 

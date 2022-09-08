@@ -5,14 +5,14 @@ import statistics
 def evolve(init, config, domain, ff):
     # Initialization
     archive = voronoi_archive(domain, config)
-    fitness, features, phenotypes = ff(init)[0:3]
+    fitness, features = ff(init)[0:2]
     improvement = []
     improvement.append(archive.update(fitness, features, init))
 
     # Evolution
     for iGen in range(config['num_gens']):
         children = archive.create_children()
-        fitness, features, phenotypes = ff(children)[0:3]
+        fitness, features = ff(children)[0:2]
         improvement.append(archive.update(fitness, features, children))
         if iGen%100 == 0:
             print('Generation: ' + str(iGen) + '/' + str(config['num_gens']))

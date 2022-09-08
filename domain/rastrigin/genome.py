@@ -19,3 +19,6 @@ class math_genome(genome):
     def express(self):
         phenotype = self.genes
         return phenotype
+
+    def get_genome(self):
+        return self.genes

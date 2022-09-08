@@ -45,7 +45,7 @@ class mapelites_archive(archive):
         unq, ind = np.unique(bin_fitness[0:2,:], return_inverse=False, return_index=True, axis=1)
         best_index = idx[ind]
         best_bin = bin_assignment[:, best_index]
-            
+
         # Get replacement IDs in both archive and candidate arrays
         replaced = []
         replacement = []

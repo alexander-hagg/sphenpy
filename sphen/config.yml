@@ -2,4 +2,4 @@ num_samples: 10
 init_samples: 20
 total_samples: 100
 exploration_factor: 20
-visualize_intermediate: True
+visualize_intermediate: False
