@@ -79,6 +79,11 @@ class mapelites_archive(archive):
         pool = pool.flatten()
         return pool
 
+    def get_all(self):
+        self.fitness
+        self.genes
+        self.features
+
     def create_children(self):
         # Randomly select parents and copy to children
         pool = self.create_pool()

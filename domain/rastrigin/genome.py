@@ -21,4 +21,5 @@ class math_genome(genome):
         return phenotype
 
     def get_genome(self):
+        print(f'self.genes.shape {self.genes.shape}')
         return self.genes

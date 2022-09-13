@@ -4,14 +4,13 @@ import matplotlib.pyplot as plt
 from qd.mapelites import cfg as qdcfg
 from sphen import evolution, cfg
 
-from domain.rastrigin import init, fitness_function
-# from domain.nsg_cppn import init, fitness_function, plotgrid
+# from domain.rastrigin import init, fitness_function
+from domain.nsg_cppn import init, fitness_function, plotgrid
 
 
 qdconfig = qdcfg.get()
 config = cfg.get()
 domain, random_pop = init.do(config['init_samples'])
-print(domain)
 
 start = time.time()
 fitfun = lambda x: fitness_function.get(x, domain)
@@ -19,7 +18,7 @@ archive,improvement = evolution.evolve(random_pop, config, qdconfig, domain, fit
 print(f'Time elapsed: {time.time() - start:.2}s.')
 # archive.plot()
 
-# list_genomes = archive.create_pool()
-# fitness, features, phenotypes, rawfeatures = fitfun(list_genomes)
-# niches = archive.get_niches()
-# plot = plotgrid.plot(phenotypes, domain, features=features, fitness=fitness, niches=niches, rawfeatures=rawfeatures, filename='archive.png', gridresolution=config['resolution'], output_resolution=[4000, 4000])
+list_genomes = archive.create_pool()
+fitness, features, phenotypes, rawfeatures = fitfun(list_genomes)
+niches = archive.get_niches()
+plot = plotgrid.plot(phenotypes, domain, features=features, fitness=fitness, niches=niches, rawfeatures=rawfeatures, filename='archive.png', gridresolution=qdconfig['resolution'], output_resolution=[4000, 4000])

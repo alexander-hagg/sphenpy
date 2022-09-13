@@ -30,30 +30,36 @@ def evolve(samples, config, qdconfig, domain, ff):
 
         # Evolve archive with acquisition function
         ucbfitfun = lambda x: surrogates.ucb(x, models, config['exploration_factor'])
-        archive = qd.evolve(observation, qdconfig, domain, ucbfitfun)
+        archive, improvement = qd.evolve(observation, qdconfig, domain, ucbfitfun)
         if config['visualize_intermediate'] is True:
             figure = visualize.plot(archive, domain, ucbplot=True)
             figure.savefig('results/ucb_fitness_' + str(observation.shape[0]), dpi=600)
 
         # Flatten genes and features (due to MAP-Elites-like structure of some archives)
         flat_genes = archive.genes
-        # flat_genes = archive['genes'].reshape((-1, domain['dof']))
-        # flat_genes = flat_genes[~np.isnan(flat_genes).any(axis=1)]
-        flat_features = archive['features'].reshape((-1, len(domain['features'])))
-        flat_features = flat_features[~np.isnan(flat_features).any(axis=1)]
+        flat_genes = flat_genes.reshape((-1, 1))
+        flat_features = archive.features
+        flat_features = flat_features.reshape((-1, len(domain['features'])))
+        flat_fitness = archive.fitness
+        flat_fitness = flat_fitness.reshape((-1, 1))
+        present = np.squeeze(~np.isnan(flat_fitness))
+        flat_genes = flat_genes[present]
+        flat_fitness = flat_fitness[present,:]
+        flat_features = flat_features[present,:]
 
         # Select infill samples
         # Create emitter points in the archive using Sobol sequence and select closest archive members
         emitter_points = sampler.random(config['num_samples'])
         distances = cdist(emitter_points, flat_features)
         selection = np.argmin(distances, axis=1)
-        sel_observation = flat_genes[selection]
+        sel_observation = np.squeeze(flat_genes[selection])
 
         # Get ground truth fitness and add samples to the observation set
-        sel_fitness, sel_features = ff.get(sel_observation, domain)
+        sel_fitness, sel_features = ff(sel_observation)[0:2]
         sel_features = sel_features[:,domain['features']]
-        observation = np.vstack([observation, sel_observation])
-        fitness = np.vstack([fitness, sel_fitness])
+
+        observation.extend(sel_observation)
+        fitness = np.hstack([fitness, sel_fitness])
         features = np.vstack([features, sel_features])
 
     # Finally, evolve an archive based on fitness alone (no more exploring)

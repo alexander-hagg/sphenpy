@@ -62,3 +62,8 @@ class cppn_genome(genome):
                         voxels[x, y, z] = 1
 
         return voxels
+
+    def get_genome(self):
+        g = self.genes.get_genome()
+        g = np.expand_dims(g, 1)
+        return g
