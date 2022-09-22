@@ -7,9 +7,9 @@ feat_ranges: [[0.0, 1, 1000, 0.0],[3000.0, 16, 3000.0, 90.0]]
 plotscale: True
 num_grid_cells: 30
 max_height: 2
-num_neurons: 3
-num_layers: 3
-init_weight_variance: 10.0
+num_neurons: 2
+num_layers: 2
+init_weight_variance: 3.0
 scale_cppn_out: False
 substrate_address: 'substrate.pbm'
 substrate_length: 93

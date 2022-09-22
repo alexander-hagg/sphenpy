@@ -9,6 +9,9 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 from util import maptorange
 
+import sys
+sys.path.insert(0,'util/quadric')
+
 from voxelfuse.voxel_model import VoxelModel
 from voxelfuse.mesh import Mesh
 

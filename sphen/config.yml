@@ -1,5 +1,5 @@
 num_samples: 10
 init_samples: 100
-total_samples: 1000
+total_samples: 500
 exploration_factor: 2
 visualize_intermediate: False

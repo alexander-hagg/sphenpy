@@ -13,3 +13,7 @@ Feel free to use and adapt this code. Contributions to this repository are welco
 [1] Hagg, A., Wilde, D., Asteroth, A., & Bäck, T. (2020, September). Designing air flow with surrogate-assisted phenotypic niching. In International Conference on Parallel Problem Solving from Nature (pp. 140-153). Springer, Cham.
 
 [2] https://github.com/lettucecfd/lettuce
+
+## Installation
+Please use requirements.txt [TODO]
+Also refer to https://github.com/jannessm/quadric-mesh-simplification for manual installation, because pip installation of quad_mesh_simplify does not work for some reason

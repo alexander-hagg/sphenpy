@@ -14,7 +14,7 @@ domain, random_pop = init.do(config['init_samples'])
 
 start = time.time()
 fitfun = lambda x: fitness_function.get(x, domain)
-archive,improvement = evolution.evolve(random_pop, config, qdconfig, domain, fitfun)
+archive, improvement = evolution.evolve(random_pop, config, qdconfig, domain, fitfun)
 print(f'Time elapsed: {time.time() - start:.2}s.')
 # archive.plot()
 
