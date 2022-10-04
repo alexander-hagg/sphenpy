@@ -1,7 +1,7 @@
 algorithm: 'voronoielites'
 resolution: 256
-num_gens: 5000
+num_gens: 200
 num_children: 10
-mut_probability: 0.5
-mut_sigma: 0.1
-init_samples: 5
+mut_probability: 0.05
+mut_sigma: 0.5
+init_samples: 100
