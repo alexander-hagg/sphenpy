@@ -3,7 +3,7 @@ features: [0,1]
 labels: ['footprint area', 'number of structures', 'living space area', 'windblock area']
 plot_size: 120
 # feat_ranges: [[0.0, 1, 0.0, 0.0],[8649.0, 16, 25947.0, 25.0]]
-feat_ranges: [[0.0, 1, 1000, 0.0],[3000.0, 16, 3000.0, 90.0]]
+feat_ranges: [[500.0, 2, 1000, 0.0],[3000.0, 16, 3000.0, 90.0]]
 plotscale: True
 num_grid_cells: 30
 max_height: 2

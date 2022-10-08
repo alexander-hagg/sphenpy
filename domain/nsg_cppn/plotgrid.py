@@ -47,9 +47,9 @@ def plot(phenotypes, domain, features=None, fitness=None, niches=None, rawfeatur
         # clrscale = 10*fitness[0][i]
         # if clrscale > 1.0:
         #     clrscale = 1.0
-        clrscale = fitness[0][i]
-        fitnesscolor = [1-clrscale,clrscale,0.0]
-        plotter.set_background(fitnesscolor, all_renderers=False)
+        # clrscale = fitness[0][i]
+        # fitnesscolor = [1-clrscale,clrscale,0.0]
+        # plotter.set_background(fitnesscolor, all_renderers=False)
     plotter.link_views()
     plotter.camera_position = [(50, 50, 20), (sz, sz, 0), (0, 0, 1)]
     plotter.show(screenshot=filename)
