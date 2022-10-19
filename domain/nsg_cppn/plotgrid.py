@@ -4,20 +4,36 @@ import pyvista as pv
 import numpy as np
 
 
-def plot(phenotypes, domain, features=None, fitness=None, niches=None, rawfeatures=None, filename=None, gridresolution=None, output_resolution=[8192, 6144]):
+def plot(
+    phenotypes,
+    domain,
+    features=None,
+    fitness=None,
+    niches=None,
+    rawfeatures=None,
+    filename=None,
+    gridresolution=None,
+    output_resolution=[8192, 6144],
+):
     nshapes = len(phenotypes)
     if niches is not None:
         if gridresolution is not None:
             nrows = gridresolution
             ncols = gridresolution
         else:
-            nrows = np.max(niches[:,0])+1
-            ncols = np.max(niches[:,1])+1
+            nrows = np.max(niches[:, 0]) + 1
+            ncols = np.max(niches[:, 1]) + 1
     else:
         nrows = int(np.ceil(np.sqrt(nshapes)))
         ncols = nrows
-    shape=(nrows, ncols)
-    plotter = pv.Plotter(off_screen=True, window_size=output_resolution, shape=shape, line_smoothing=True, polygon_smoothing=True)
+    shape = (nrows, ncols)
+    plotter = pv.Plotter(
+        off_screen=True,
+        window_size=output_resolution,
+        shape=shape,
+        line_smoothing=True,
+        polygon_smoothing=True,
+    )
     for i in range(nshapes):
         if niches is None:
             row = int(np.floor(i / nrows))
@@ -25,24 +41,40 @@ def plot(phenotypes, domain, features=None, fitness=None, niches=None, rawfeatur
         else:
             row, col = niches[i]
         if rawfeatures is not None:
-            feature_info = domain['labels'][0] + ': ' + str(round(rawfeatures[i,0])) + 'm²\n' + \
-                domain['labels'][1] + ': ' + str(round(rawfeatures[i,1])) + '\n' + \
-                domain['labels'][2] + ': ' + str(round(rawfeatures[i,2])) + 'm²\n' + \
-                domain['labels'][3] + ': ' + str(round(rawfeatures[i,3])) + 'm²\n'
+            feature_info = (
+                domain["labels"][0]
+                + ": "
+                + str(round(rawfeatures[i, 0]))
+                + "m²\n"
+                + domain["labels"][1]
+                + ": "
+                + str(round(rawfeatures[i, 1]))
+                + "\n"
+                + domain["labels"][2]
+                + ": "
+                + str(round(rawfeatures[i, 2]))
+                + "m²\n"
+                + domain["labels"][3]
+                + ": "
+                + str(round(rawfeatures[i, 3]))
+                + "m²\n"
+            )
         else:
             feature_info = ""
 
         plotter.subplot(row, col)
-        sz = domain['num_grid_cells']/2
+        sz = domain["num_grid_cells"] / 2
         plotter.add_text(feature_info, font_size=8)
 
         if np.sum(phenotypes[i]) > 0:
             render_mesh(phenotypes[i])
-            mesh = pv.read('mesh.stl')
+            mesh = pv.read("mesh.stl")
             plotter.add_mesh(mesh)
 
-        plane_mesh = pv.Plane(center=(sz,sz,0), direction=(0, 0, -1), i_size=2*sz, j_size=2*sz)
-        sat = pv.read_texture('domain/nsg_cppn/mapsat.png')
+        plane_mesh = pv.Plane(
+            center=(sz, sz, 0), direction=(0, 0, -1), i_size=2 * sz, j_size=2 * sz
+        )
+        sat = pv.read_texture("domain/nsg_cppn/mapsat.png")
         plotter.add_mesh(plane_mesh, texture=sat)
         # clrscale = 10*fitness[0][i]
         # if clrscale > 1.0:
@@ -59,4 +91,4 @@ def plot(phenotypes, domain, features=None, fitness=None, niches=None, rawfeatur
 def render_mesh(phenotype):
     model = VoxelModel(phenotype)  # , generateMaterials(4)  4 is aluminium.
     mesh = Mesh.fromVoxelModel(model)
-    mesh.export('mesh.stl')
+    mesh.export("mesh.stl")

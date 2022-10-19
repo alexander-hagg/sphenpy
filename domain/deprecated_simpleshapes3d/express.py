@@ -17,8 +17,8 @@ def express_single(genome, domain):
     if (np.isnan(genome)).any():
         return None
     npoints = 51
-    middle = int(len(genome)/2)
-    rho, phi = cart2pol(domain['base'][0], domain['base'][1])
+    middle = int(len(genome) / 2)
+    rho, phi = cart2pol(domain["base"][0], domain["base"][1])
     rho = rho * genome[:middle]
     phi = phi + genome[middle:]
     x, y = pol2cart(rho, phi)
@@ -29,7 +29,7 @@ def express_single(genome, domain):
     points = np.transpose(np.asarray([x, y]))
     p1 = Polygon(points)
     p1 = shapely.validation.make_valid(p1)
-    if p1.type == 'MultiPolygon' or p1.type == 'GeometryCollection':
+    if p1.type == "MultiPolygon" or p1.type == "GeometryCollection":
         p1 = reduce_multipolygon_to_polygon(p1)
     return p1
 
@@ -42,10 +42,12 @@ def reduce_multipolygon_to_polygon(polygon):
 
 
 def visualize_raw(phenotype, color=[0, 0, 0], dx=0, dy=0):
-    if phenotype.type == 'Polygon':
+    if phenotype.type == "Polygon":
         x, y = zip(*list(phenotype.exterior.coords))
-        plt.fill(np.add(x, dx), np.add(y, dy), facecolor=color, edgecolor=None, linewidth=0.2)
-    if phenotype.type == 'GeometryCollection' or phenotype.type == 'MultiPolygon':
+        plt.fill(
+            np.add(x, dx), np.add(y, dy), facecolor=color, edgecolor=None, linewidth=0.2
+        )
+    if phenotype.type == "GeometryCollection" or phenotype.type == "MultiPolygon":
         for i in range(len(phenotype.geoms)):
             visualize_raw(phenotype.geoms[i], color=color, dx=dx, dy=dy)
     return plt
@@ -53,7 +55,7 @@ def visualize_raw(phenotype, color=[0, 0, 0], dx=0, dy=0):
 
 def visualize(phenotype):
     visualize_raw(phenotype)
-    plt.axis('equal')
+    plt.axis("equal")
     ax = plt.gca()
     ax.set_xlim([-1, 1])
     ax.set_ylim([-1, 1])
@@ -63,10 +65,10 @@ def visualize(phenotype):
 def cart2pol(x, y):
     rho = np.hypot(x, y)
     phi = np.arctan2(y, x)
-    return(rho, phi)
+    return (rho, phi)
 
 
 def pol2cart(rho, phi):
     x = rho * np.cos(phi)
     y = rho * np.sin(phi)
-    return(x, y)
+    return (x, y)

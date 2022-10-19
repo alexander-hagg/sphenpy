@@ -8,7 +8,9 @@ def train(observation, targets):
     for i in range(len(targets)):
         kernel = GPy.kern.RBF(input_dim=flat.shape[1], variance=0.1, lengthscale=0.1)
         m = GPy.models.GPRegression(flat, targets[i].T, kernel)
-        m.optimize_restarts(optimizer='bfgs', messages=False, num_restarts=10, verbose=False)
+        m.optimize_restarts(
+            optimizer="bfgs", messages=False, num_restarts=10, verbose=False
+        )
         models.append(m)
     return models
 
@@ -45,15 +47,19 @@ def train_sparse(observation, targets):
     for i in range(len(targets)):
         print(i)
         # kernel = GPy.kern.RBF(input_dim=observation.shape[1], variance=0.1, lengthscale=0.1)
-        Z = np.random.rand(10,observation.shape[1])
-        m = GPy.models.SparseGPRegression(observation,targets[i],Z=Z)
-        m.optimize_restarts(optimizer='bfgs', messages=False, num_restarts=10, verbose=False)
+        Z = np.random.rand(10, observation.shape[1])
+        m = GPy.models.SparseGPRegression(observation, targets[i], Z=Z)
+        m.optimize_restarts(
+            optimizer="bfgs", messages=False, num_restarts=10, verbose=False
+        )
         models.append(m)
     return models
 
 
 def train_multioutput(observation, targets):
-    kernel = GPy.kern.RBF(observation.shape[1],lengthscale=0.1)**GPy.kern.Coregionalize(input_dim=observation.shape[1],output_dim=3, rank=1)
-    m = GPy.models.MultioutputGP(observation,targets,kernel=kernel)
+    kernel = GPy.kern.RBF(
+        observation.shape[1], lengthscale=0.1
+    ) ** GPy.kern.Coregionalize(input_dim=observation.shape[1], output_dim=3, rank=1)
+    m = GPy.models.MultioutputGP(observation, targets, kernel=kernel)
     m.optimize_restarts(messages=False, num_restarts=10, verbose=False)
     return m

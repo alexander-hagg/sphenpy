@@ -13,12 +13,13 @@ def do(genomes, domain):
         phenotypes.append(phenotype)
     return phenotypes
 
+
 def express_single(genome, domain):
     if (np.isnan(genome)).any():
         return None
     npoints = 51
-    middle = int(len(genome)/2)
-    rho, phi = cart2pol(domain['base'][0], domain['base'][1])
+    middle = int(len(genome) / 2)
+    rho, phi = cart2pol(domain["base"][0], domain["base"][1])
     rho = rho * genome[:middle]
     phi = phi + genome[middle:]
     x, y = pol2cart(rho, phi)
@@ -29,9 +30,10 @@ def express_single(genome, domain):
     points = np.transpose(np.asarray([x, y]))
     p1 = Polygon(points)
     p1 = shapely.validation.make_valid(p1)
-    if p1.type == 'MultiPolygon' or p1.type == 'GeometryCollection':
+    if p1.type == "MultiPolygon" or p1.type == "GeometryCollection":
         p1 = reduce_multipolygon_to_polygon(p1)
     return p1
+
 
 def reduce_multipolygon_to_polygon(polygon):
     areas = []
@@ -39,24 +41,29 @@ def reduce_multipolygon_to_polygon(polygon):
         areas.append(polygon.geoms[i].area)
     return polygon.geoms[np.argmax(areas)]
 
+
 def visualize_raw(phenotype, color=[0, 0, 0], dx=0, dy=0):
-    if phenotype.type == 'Polygon':
+    if phenotype.type == "Polygon":
         tx, ty = zip(*list(phenotype.exterior.coords))
         x = tuple([yy for yy in ty])
-        y = tuple([-1.0*xx for xx in tx])
-        plt.fill(np.add(x, dx), np.add(y, dy), facecolor=color, edgecolor=None, linewidth=0.2)
-    if phenotype.type == 'GeometryCollection' or phenotype.type == 'MultiPolygon':
+        y = tuple([-1.0 * xx for xx in tx])
+        plt.fill(
+            np.add(x, dx), np.add(y, dy), facecolor=color, edgecolor=None, linewidth=0.2
+        )
+    if phenotype.type == "GeometryCollection" or phenotype.type == "MultiPolygon":
         for i in range(len(phenotype.geoms)):
             visualize_raw(phenotype.geoms[i], color=color, dx=dx, dy=dy)
     return plt
-    
+
+
 def visualize(phenotype):
     visualize_raw(phenotype)
-    plt.axis('equal')
+    plt.axis("equal")
     ax = plt.gca()
     ax.set_xlim([-1, 1])
     ax.set_ylim([-1, 1])
     plt.show()
+
 
 def visualize_multiple(phenotypes):
     fig, axs = plt.subplots(len(phenotypes))
@@ -64,18 +71,20 @@ def visualize_multiple(phenotypes):
         plt.sca(axs[i])
         visualize_raw(phenotypes[i])
         # plt.sca(axs[i]).axis('equal')
-        plt.axis('equal')
+        plt.axis("equal")
         ax = plt.gca()
         ax.set_xlim([-0.5, 0.5])
         ax.set_ylim([-0.5, 0.5])
     plt.show()
 
+
 def cart2pol(x, y):
     rho = np.hypot(x, y)
     phi = np.arctan2(y, x)
-    return(rho, phi)
+    return (rho, phi)
+
 
 def pol2cart(rho, phi):
     x = rho * np.cos(phi)
     y = rho * np.sin(phi)
-    return(x, y)
+    return (x, y)
